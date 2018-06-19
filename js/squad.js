@@ -1,7 +1,7 @@
 function Squad(rowsOfEnemies, columnsOfEnemies) {
   this.enemiesCollection = [];
   //this._enemiesCoordinates = [];
-  this.xSquad = Math.floor( setup.limitWidth / 6);
+  this.xSquad = Math.floor(setup.limitWidth / 6);
   this.ySquad = Math.floor(setup.limitHeight / 5);
   this.xMaxSquad = Math.floor(setup.limitWidth / 6) * 3;
   this.yMaxSquad = Math.floor(setup.limitHeight / 5) * 3;
@@ -20,17 +20,25 @@ Squad.prototype._enroll = function (rowsOfEnemies, columnsOfEnemies) {
   }
   for (var n2Row = 1; n2Row < 3; n2Row++) {
     for (var n2Col = 0; n2Col < columnsOfEnemies; n2Col++) { //Level 2
-       this.enemiesCollection[n2Row][n2Col] = new Enemy(this.xSquad + n2Col * 50,this.ySquad+n2Row*50, 'veteran');
-     }
-   }
+      this.enemiesCollection[n2Row][n2Col] = new Enemy(this.xSquad + n2Col * 50, this.ySquad + n2Row * 50, 'veteran');
+    }
+  }
   for (var n1Row = 3; n1Row < 5; n1Row++) {
     for (var n1Col = 0; n1Col < columnsOfEnemies; n1Col++) { //Level 1
-      this.enemiesCollection[n1Row][n1Col] = new Enemy(this.xSquad + n1Col * 50,this.ySquad+n1Row*50, 'rookie');
+      this.enemiesCollection[n1Row][n1Col] = new Enemy(this.xSquad + n1Col * 50, this.ySquad + n1Row * 50, 'rookie');
     }
   }
 };
 Squad.prototype.move = function () {
 
+  for (var col = 0; col < this.squad.enemiesCollection.length; col++) {
+    for (var row = 0; row < this.squad.enemiesCollection[col].length; row++) {
+      enemySelected = this.squad.enemiesCollection[col][row];
+      if (enemySelected) {
+        enemySelected.goLeft();
+      }
+    }
+  }
 };
 
 Squad.prototype.atack = function () {

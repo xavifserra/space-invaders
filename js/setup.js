@@ -17,11 +17,13 @@ var setup = {
   enemyBossColor: '#0000FF',
   enemyBossTimer: function(){return Math.random()* (1 - 0.5) + 0.5;}, //random min 15s max 30s in timer 30000
   enemyBossPoints: function () {return Math.floor(Math.random() * 250);},
-  missileMax: 2,  //ratio missile equal to 2fps
+  missileMax: 3,  //ratio missile equal to 3fps
   bombMax: 6,
   fps: 35,         //frames per second in game
   bombColor: 'red',
   missileColor: 'green',
-  
-
 };
+
+var players = [
+
+];

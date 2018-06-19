@@ -3,10 +3,11 @@ function Enemy(xPos, yPos, role) {
   this.type = undefined;
   this.color = undefined;
   this.points = undefined;
+  this.mask = undefined;
   this.x = xPos;
   this.y = yPos;
-  this.width = 18;
-  this.height = 14;
+  this.width = 20;
+  this.height = 20;
   this._selectRole(role);
 }
 
@@ -16,11 +17,11 @@ Enemy.prototype.goLeft = function () {
 Enemy.prototype.goRight = function () {
   this.x += 3;
 };
-Enemy.prototype.goUp=function(){
+Enemy.prototype.goUp = function () {
   this.y += 3;
 };
-Enemy.prototype.goDown=function(){
-  this.y+=3;
+Enemy.prototype.goDown = function () {
+  this.y += 3;
 };
 Enemy.prototype._selectRole = function (role) {
 
