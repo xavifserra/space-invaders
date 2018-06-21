@@ -38,32 +38,38 @@ Game.prototype._assignEventsToKeys = function () {
 };
 
 Game.prototype._manageBufferOfKeysPressed = function () {
-  var shotOk;//Control undefined shot by fps. if projectile not false  
+  var shotOk; //Control undefined shot by fps. if projectile not false  
 
-  if (setup.keysBuffer.KeyP) {     //key P => Pause
+  if (setup.keysBuffer.KeyP) { //key P => Pause
     console.log('game paused');
   }
-  if (setup.keysBuffer.Enter) {     //Key enter 
+  if (setup.keysBuffer.Enter) { //Key enter 
 
   }
-  if (setup.keysBuffer.Space) {     //space => fire
+  if (setup.keysBuffer.Space) { //space => fire
     shotOk = this.player.fire();
-    if (shotOk) { setup.missileBuffer.push(shotOk); }
+    if (shotOk) {
+      setup.missileBuffer.push(shotOk);
+    }
   }
   if (setup.keysBuffer.ArrowLeft) { //arrow left
     this.player.goLeft();
   }
-  if (setup.keysBuffer.ArrowRight) {//arrow right
+  if (setup.keysBuffer.ArrowRight) { //arrow right
     this.player.goRight();
   }
   if (setup.keysBuffer.Space && setup.keysBuffer.ArrowLeft) { //left+fire
     shotOk = this.player.fire();
-    if (shotOk) { setup.missileBuffer.push(shotOk); }
+    if (shotOk) {
+      setup.missileBuffer.push(shotOk);
+    }
     this.player.goLeft();
   }
   if (setup.keysBuffer.Space && setup.keysBuffer.ArrowRight) { //right+fire
     shotOk = this.player.fire();
-    if (shotOk) { setup.missileBuffer.push(shotOk); }
+    if (shotOk) {
+      setup.missileBuffer.push(shotOk);
+    }
     this.player.goRight();
   }
 };
@@ -75,7 +81,9 @@ Game.prototype._drawStars = function () {
 };
 
 Game.prototype._drawPlayer = function () {
-  if (this.player.x < 1) { this.player.x = 1; }
+  if (this.player.x < 1) {
+    this.player.x = 1;
+  }
   if (this.player.x > this.maxWidth - this.player.width) {
     this.player.x = this.maxWidth - this.player.width;
   }
@@ -88,7 +96,7 @@ Game.prototype._drawBoss = function () {
     this.boss.goLeft();
     this.ctx.fillStyle = setup.enemyBossColor;
     this.ctx.fillRect(this.boss.x, this.boss.y, this.boss.width, this.boss.height);
-    if (this.boss.x < 0) {  //out of area
+    if (this.boss.x < 0) { //out of area
       this.boss = undefined;
     }
   }
@@ -105,7 +113,7 @@ Game.prototype._drawProjectile = function () {
         this.ctx.fillStyle = missileSelected.color;
         this.ctx.fillRect(missileSelected.x, missileSelected.y, missileSelected.width, missileSelected.height);
       } else setup.missileBuffer.splice(i, 1);
-    }//.bind(this));
+    } //.bind(this));
   }
 };
 
@@ -121,6 +129,7 @@ Game.prototype._drawSquad = function () {
       }
     }
   }
+  this.squad.move();
 };
 
 Game.prototype.checkCollisions = function () {
@@ -131,9 +140,9 @@ Game.prototype.checkCollisions = function () {
       missileSelected = setup.missileBuffer[i];
       //Collision with bosses
       if (this._checkCollision(missileSelected, this.boss)) {
-        this.totalPoints += this.boss.points();   //increment points 
-        setup.missileBuffer.splice(i, 1);         //destroy missile 
-        this.boss = undefined;                    //destroy boss
+        this.totalPoints += this.boss.points(); //increment points 
+        setup.missileBuffer.splice(i, 1); //destroy missile 
+        this.boss = undefined; //destroy boss
         //TODO: explosion image + sound
       }
       for (var col = 0; col < this.squad.enemiesCollection.length; col++) {
@@ -141,9 +150,10 @@ Game.prototype.checkCollisions = function () {
           enemySelected = this.squad.enemiesCollection[col][row];
           if (enemySelected) {
             if (this._checkCollision(missileSelected, enemySelected)) {
-              this.totalPoints += enemySelected.points;   //increment points 
-              setup.missileBuffer.splice(i, 1);         //destroy missile 
-              delete this.squad.enemiesCollection[col][row];                    //destroy enemy
+              this.totalPoints += enemySelected.points; //increment points 
+              setup.missileBuffer.splice(i, 1); //destroy missile 
+              delete this.squad.enemiesCollection[col][row]; //destroy enemy 
+              //this.squad.enemiesCollection[col][row]=undefined;//destroy enemy and maintain the squad structure              //TODO: explosion image + sound
               //TODO: explosion image + sound
             }
           }
@@ -155,7 +165,9 @@ Game.prototype.checkCollisions = function () {
 
 Game.prototype._checkCollision = function (object1, object2) {
 
-  if (object1 === undefined || object2 === undefined) { return false; }
+  if (object1 === undefined || object2 === undefined) {
+    return false;
+  }
 
   this.x = object1.x;
   this.y = object1.y;
@@ -176,9 +188,13 @@ Game.prototype._checkCollision = function (object1, object2) {
 };
 
 Game.prototype._drawScore = function () {
-  this.ctx.font = "bold 22px sans-serif";
+  this.ctx.font = "16px Arial";
   this.ctx.fillStyle = 'green';
   this.ctx.fillText('points: ' + this.totalPoints, 50, this.maxHeight - 10);
+
+  this.ctx.font = "16px Arial";
+  this.ctx.fillStyle = 'red';
+  this.ctx.fillText(`xMin: ${this.squad._xMinSquad} xMax: ${this.squad._xMaxSquad} yMax: ${this.squad._yMaxSquad}`, 550, this.maxHeight - 10);
 
 };
 
@@ -200,15 +216,15 @@ Game.prototype._update = function () {
     this.checkCollisions();
     this._manageBufferOfKeysPressed();
     this._drawStars();
+    this._drawProjectile();
     this._drawPlayer();
     this._drawSquad();
     this._drawBoss();
-    this._drawProjectile();
     this._drawScore();
     //random boss in max.30s
     if (!this.boss && Date.now() - this._timeStampBoss > 30000 / setup.enemyBossTimer()) {
       this._timeStampBoss = Date.now();
-      this.boss = new Enemy(setup.limitWidth - 10, setup.limitHeight / 8, 'boss');//  Make the boss 
+      this.boss = new Enemy(setup.limitWidth - 10, setup.limitHeight / 8, 'boss'); //  Make the boss 
     }
     //console.log('redraw');
   }

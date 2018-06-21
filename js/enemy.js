@@ -6,22 +6,22 @@ function Enemy(xPos, yPos, role) {
   this.mask = undefined;
   this.x = xPos;
   this.y = yPos;
-  this.width = 20;
-  this.height = 20;
+  this.width = setup.enemyWidth;
+  this.height = setup.enemyHeiht;
   this._selectRole(role);
 }
 
 Enemy.prototype.goLeft = function () {
-  this.x -= 3;
+  this.x -= setup.velocityEnemy;
 };
 Enemy.prototype.goRight = function () {
-  this.x += 3;
+  this.x += setup.velocityEnemy;
 };
 Enemy.prototype.goUp = function () {
-  this.y += 3;
+  this.y += setup.velocityEnemy;
 };
 Enemy.prototype.goDown = function () {
-  this.y += 3;
+  this.y += setup.velocityEnemy * 2;
 };
 Enemy.prototype._selectRole = function (role) {
 

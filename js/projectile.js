@@ -10,10 +10,10 @@ function Projectile(options) {
 Projectile.prototype.trajectory = function () {
   switch (this.type) {
     case 'missile':
-        this.y -= 5;
+        this.y -= setup.velocityMissile;
       break;
     case 'bomb':
-        this.y += 5;
+        this.y += setup.velocityBomb;
       break;
   }
 };
