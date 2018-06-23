@@ -1,5 +1,6 @@
 function Squad(rowsOfEnemies, columnsOfEnemies) {
   this.enemiesCollection = [];
+  this.bombBuffer=[];
   //this._enemiesCoordinates = [];
   this.xSquad = Math.floor(setup.limitWidth / 6);
   this.ySquad = Math.floor(setup.limitHeight / 5);
@@ -11,11 +12,13 @@ function Squad(rowsOfEnemies, columnsOfEnemies) {
   this._goToLeft = false;
   //fill the squad
   this._enroll(rowsOfEnemies, columnsOfEnemies);
+  this._timeStampLastShot = Date.now();
+  this.bombCounter = 0;
 }
 
 Squad.prototype._enroll = function (rowsOfEnemies, columnsOfEnemies) {
-
-  for (var i = 0; i < rowsOfEnemies; i++) { //make array 5X11
+  //make array rowsXcolumns
+  for (var i = 0; i < rowsOfEnemies; i++) {
     this.enemiesCollection[i] = new Array(columnsOfEnemies);
   }
 
@@ -27,7 +30,7 @@ Squad.prototype._enroll = function (rowsOfEnemies, columnsOfEnemies) {
       this.enemiesCollection[n2Row][n2Col] = new Enemy(this.xSquad + n2Col * setup.enemySpace, this.ySquad + n2Row * setup.enemySpace, 'veteran');
     }
   }
-  for (var n1Row = 3; n1Row < 5; n1Row++) {
+  for (var n1Row = 3; n1Row < rowsOfEnemies; n1Row++) {
     for (var n1Col = 0; n1Col < columnsOfEnemies; n1Col++) { //Level 1
       this.enemiesCollection[n1Row][n1Col] = new Enemy(this.xSquad + n1Col * setup.enemySpace, this.ySquad + n1Row * setup.enemySpace, 'rookie');
     }
@@ -37,23 +40,23 @@ Squad.prototype._enroll = function (rowsOfEnemies, columnsOfEnemies) {
 Squad.prototype.move = function () {
 
   this.enemiesCollection.forEach(function (row) {
-    row.forEach(function (element) {
-      if (element.y > this._yMaxSquad) { //enemy in the bottom 
-        this._yMaxSquad = element.y;
+    row.forEach(function (enemy) {
+      if (enemy.y > this._yMaxSquad) { //enemy in the bottom 
+        this._yMaxSquad = enemy.y;
       }
-      if (element.x >= this._xMaxSquad) { //enemy in the right 
-        this._xMaxSquad = element.x;
+      if (enemy.x >= this._xMaxSquad) { //enemy in the right 
+        this._xMaxSquad = enemy.x;
       }
-      if (element.x < this._xMinSquad) { //enemy in the left 
-        this._xMinSquad = element.x;
+      if (enemy.x < this._xMinSquad) { //enemy in the left 
+        this._xMinSquad = enemy.x;
       }
     }.bind(this));
   }.bind(this));
 
-  if (this._xMaxSquad + setup.velocityEnemy < setup.limitWidth - setup.enemyWidth && this._goToRight) {
+  if (this._xMaxSquad + setup.enemyVelocity < setup.limitWidth - setup.enemyWidth && this._goToRight) {
     this._moveSquadTo('right');
   }
-  if (this._xMaxSquad + setup.velocityEnemy >= setup.limitWidth - setup.enemyWidth * 2 && this._goToRight) {
+  if (this._xMaxSquad + setup.enemyVelocity >= setup.limitWidth - setup.enemyWidth * 2 && this._goToRight) {
     this._moveSquadTo('down');
     this._goToRight = false;
     this._goToLeft = true;
@@ -61,10 +64,10 @@ Squad.prototype.move = function () {
     this._xMinSquad = setup.limitHeight;
     this._moveSquadTo('left');
   }
-  if (this._xMinSquad - setup.velocityEnemy > setup.enemyWidth && this._goToLeft) {
+  if (this._xMinSquad - setup.enemyVelocity > setup.enemyWidth && this._goToLeft) {
     this._moveSquadTo('left');
   }
-  if (this._xMinSquad - setup.velocityEnemy <= setup.enemyWidth && this._goToLeft) {
+  if (this._xMinSquad - setup.enemyVelocity <= setup.enemyWidth && this._goToLeft) {
     this._moveSquadTo('down');
     this._goToRight = true;
     this._goToLeft = false;
@@ -72,34 +75,46 @@ Squad.prototype.move = function () {
     this._xMinSquad = setup.limitHeight;
     this._moveSquadTo('right');
   }
-  if (this._yMaxSquad === setup.xPlayerPos()) {
+  if (this._yMaxSquad === setup.playerPosX()) {
     return true;
   }
 };
 
 Squad.prototype._moveSquadTo = function (direction) {
-  for (var col = 0; col < this.enemiesCollection.length; col++) {
-    for (var row = 0; row < this.enemiesCollection[col].length; row++) {
-      enemySelected = this.enemiesCollection[col][row];
-      if (enemySelected) {
-        switch (direction) {
-          case 'right':
-            enemySelected.goRight();
-            break;
-          case 'left':
-            enemySelected.goLeft();
-            break;
-          case 'down':
-            enemySelected.goDown();
-            break;
-        }
+
+  this.enemiesCollection.forEach(function (row) {
+    row.forEach(function (element) {
+      switch (direction) {
+        case 'right':
+          element.goRight();
+          break;
+        case 'left':
+          element.goLeft();
+          break;
+        case 'down':
+          element.goDown();
+          break;
       }
-    }
-  }
+    }.bind(this));
+  }.bind(this));
 };
 
 Squad.prototype.atack = function () {
+  //TODO: dispara la clase
+  var shootOK;
 
-  //dispara la clase
+
+  if (Date.now() - this._timeStampLastShot > (1000 / setup.bombTimer)) { // && this.bombBuffer.length < setup.bombTimer) {
+    this._timeStampLastShot = Date.now();
+    shootOk = this.enemiesCollection[this.enemiesCollection.length - 1][Math.floor(Math.random() * (setup.enemiesInColumn - 1))].fire();
+    if (shootOk) {
+      if (this.bombCounter <= setup.bombMax) {
+        this.bombBuffer.push(shootOk);
+        this.bombCounter++;
+      }
+    }
+  }
 
 };
+// for (var col = 0; col < this.enemiesCollection.length; col++) {
+//   for (var row = 0; row < this.enemiesCollection[col].length; row++) {

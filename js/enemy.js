@@ -8,21 +8,27 @@ function Enemy(xPos, yPos, role) {
   this.y = yPos;
   this.width = setup.enemyWidth;
   this.height = setup.enemyHeiht;
+  this.enemyVelocity=setup.enemyVelocity;
   this._selectRole(role);
+  this._timeStampLastShot = Date.now();
 }
 
 Enemy.prototype.goLeft = function () {
-  this.x -= setup.velocityEnemy;
+  this.x -= this.enemyVelocity;
 };
+
 Enemy.prototype.goRight = function () {
-  this.x += setup.velocityEnemy;
+  this.x += this.enemyVelocity;
 };
+
 Enemy.prototype.goUp = function () {
-  this.y += setup.velocityEnemy;
+  this.y += this.enemyVelocity;
 };
+
 Enemy.prototype.goDown = function () {
-  this.y += setup.velocityEnemy * 2;
+  this.y += this.enemyVelocity * 2;
 };
+
 Enemy.prototype._selectRole = function (role) {
 
   switch (role) {
@@ -48,7 +54,15 @@ Enemy.prototype._selectRole = function (role) {
       break;
   }
 };
-Enemy.prototype._animate = function () {
+
+Enemy.prototype.fire = function () {
+  if (Date.now() - this._timeStampLastShot > (1000 / setup.bombMax)) {
+    this._timeStampLastShot = Date.now();
+    return new Projectile({ type: 'bomb', gunner: this });
+  } else return false;
+};
+
+Enemy.prototype.kill = function () {
   //llevar a la funcion de animación
   var rows = 2;
   var cols = 6;
