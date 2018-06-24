@@ -20,13 +20,12 @@ Player.prototype.goRight = function () {
 };
 
 Player.prototype.fire = function () {
-//TODO: sound of fire
 
-  if (Date.now() - this._timeStampLastShot > (1000 / setup.missileMax)) {
-    this._timeStampLastShot = Date.now();
+//  if (Date.now() - this._timeStampLastShot > (1000 / setup.missileMax)) {
+//    this._timeStampLastShot = Date.now();
     return new Projectile({ type: 'missile', gunner: this });
-  }
-  else return false;
+//  }
+//  else return false;
 };
 
 Player.prototype.kill=function(){

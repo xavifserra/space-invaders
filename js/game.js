@@ -12,6 +12,7 @@ function Game(ctx, keysBuffer) {
 
   //control of FPS
   this._timeStamp = Date.now();
+  this._timeStampMissile=Date.now();
   this._timeStampBoss = Date.now();
 
   //player & enemies
@@ -35,11 +36,7 @@ Game.prototype._manageBufferOfKeysPressed = function () {
 
   }
   if (this.keysBuffer.Space) { //space => fire
-    shootOk = this.player.fire();
-    if (shootOk) {
-      this.missileBuffer.push(shootOk);
-      this.soundOfShoot.play();
-    }
+    this._playerFire();
   }
   if (this.keysBuffer.ArrowLeft) { //arrow left
     this.player.goLeft();
@@ -48,19 +45,11 @@ Game.prototype._manageBufferOfKeysPressed = function () {
     this.player.goRight();
   }
   if (this.keysBuffer.Space && this.keysBuffer.ArrowLeft) { //left+fire
-    shootOk = this.player.fire();
-    if (shootOk) {
-      this.missileBuffer.push(shootOk);
-      this.soundOfShoot.play();
-    }
+    this._playerFire();
     this.player.goLeft();
   }
   if (this.keysBuffer.Space && this.keysBuffer.ArrowRight) { //right+fire
-    shootOk = this.player.fire();
-    if (shootOk) {
-      this.missileBuffer.push(shootOk);
-      this.soundOfShoot.play();
-    }
+    this._playerFire();
     this.player.goRight();
   }
 };
@@ -82,6 +71,18 @@ Game.prototype._drawPlayer = function () {
   this.ctx.fillStyle = this.player.color;
   this.ctx.fillRect(this.player.x, this.player.y, this.player.width, this.player.height);
   //this.ctx.drawImage(this.player.imageCenter,0,0,40,40,this.player.x, this.player.y, this.player.width, this.player.height);
+};
+
+Game.prototype._playerFire = function () {
+
+  if (Date.now() - this._timeStampMissile > (1000 / setup.missileMax)) {
+    this._timeStampMissile = Date.now();
+    shootOk = this.player.fire();
+    if (shootOk) {
+      this.missileBuffer.push(shootOk);
+      this.soundOfShoot.play();
+    }
+  }
 };
 
 Game.prototype._drawBoss = function () {
@@ -144,12 +145,12 @@ Game.prototype._drawSquad = function () {
 Game.prototype._drawScore = function () {
   this.ctx.font = "bold 20px Phosphate";
   this.ctx.fillStyle = 'green';
-  this.ctx.fillText(`points: ${this.totalPoints}`, this.maxWidth / 10 ,   this.maxHeight/20*2);
-  this.ctx.fillText(`live: ${this.live}`, this.maxWidth / 10 * 8, this.maxHeight/20*2);
+  this.ctx.fillText(`points: ${this.totalPoints}`, this.maxWidth / 10, this.maxHeight / 20 * 2);
+  this.ctx.fillText(`live: ${this.live}`, this.maxWidth / 10 * 8, this.maxHeight / 20 * 2);
   if (this.debug) {
     this.ctx.font = "16px Arial";
     this.ctx.fillStyle = 'red';
-    this.ctx.fillText(`xMin: ${this.squad._xMinSquad} xMax: ${this.squad._xMaxSquad} yMax: ${this.squad._yMaxSquad} bombs: ${this.squad.bombBuffer.length}`, this.maxWidth / 10 * 4, this.maxHeight/20);
+    this.ctx.fillText(`xMin: ${this.squad._xMinSquad} xMax: ${this.squad._xMaxSquad} yMax: ${this.squad._yMaxSquad} bombs: ${this.squad.bombBuffer.length}`, this.maxWidth / 10 * 4, this.maxHeight / 20);
   }
 };
 
@@ -159,7 +160,7 @@ Game.prototype.checkCollisions = function () {
   this.squad.bombBuffer.forEach(function (bomb) {
     if (this._collision(bomb, this.player)) {
       this.soundsOfExplosion.play();
-      this.squad.bombCounter--;                    //decrease bombs in game zone. can shoot to bombMax in the round  
+      this.squad.bombCounter--; //decrease bombs in game zone. can shoot to bombMax in the round  
       this.live--;
       console.log('GAME OVER');
     }
@@ -172,7 +173,7 @@ Game.prototype.checkCollisions = function () {
         if (this._collision(this.squad.bombBuffer[bomb], this.missileBuffer[missile])) {
           this.missileBuffer.splice(missile, 1); //destroy missile
           this.squad.bombBuffer.splice(bomb, 1); //destroy bomb
-          this.squad.bombCounter--;                    //decrease bombs in game zone. can shoot to bombMax in the round  
+          this.squad.bombCounter--; //decrease bombs in game zone. can shoot to bombMax in the round  
         }
       }
     }
@@ -198,7 +199,7 @@ Game.prototype.checkCollisions = function () {
             if (this._collision(missileSelected, enemySelected)) {
               this.totalPoints += enemySelected.points; //increment points 
               this.missileBuffer.splice(missile, 1); //destroy missile 
-              this.squad.enemiesCollection[col].splice(row,1); //destroy enemy
+              this.squad.enemiesCollection[col].splice(row, 1); //destroy enemy
               //delete this.squad.enemiesCollection[col][row]; //destroy enemy and maintain the structure
               this.soundsOfEnemyKilled.play();
             }
