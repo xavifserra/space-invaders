@@ -1,6 +1,8 @@
 function Player(xPos, yPos) {
 
-  this.mask = undefined;
+  this.imageCenter = undefined;
+  this.imageLeft=setup.playerImage;
+  this.imageRight=setup.playerImage;
   this.x = xPos;
   this.y = yPos;
   this.width = setup.playerWidth;

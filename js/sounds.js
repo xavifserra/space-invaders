@@ -12,9 +12,11 @@ Sound.prototype.init = function (src) {
   document.body.appendChild(this.sound);
   
 };
+
 Sound.prototype.play = function () {
   this.sound.play();
 };
+
 Sound.prototype.stop = function () {
   this.sound.pause();
 };

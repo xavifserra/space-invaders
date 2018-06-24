@@ -1,6 +1,6 @@
 function Squad(rowsOfEnemies, columnsOfEnemies) {
   this.enemiesCollection = [];
-  this.bombBuffer=[];
+  this.bombBuffer = [];
   //this._enemiesCoordinates = [];
   this.xSquad = Math.floor(setup.limitWidth / 6);
   this.ySquad = Math.floor(setup.limitHeight / 5);
@@ -13,7 +13,8 @@ function Squad(rowsOfEnemies, columnsOfEnemies) {
   //fill the squad
   this._enroll(rowsOfEnemies, columnsOfEnemies);
   this._timeStampLastShot = Date.now();
-  this.bombCounter = 0;
+  // this.bombCounter = 0;
+  this.bombMax = setup.bombMax;
 }
 
 Squad.prototype._enroll = function (rowsOfEnemies, columnsOfEnemies) {
@@ -100,21 +101,30 @@ Squad.prototype._moveSquadTo = function (direction) {
 };
 
 Squad.prototype.atack = function () {
-  //TODO: dispara la clase
+  //TODO: dispara desde la clase
   var shootOK;
-
-
-  if (Date.now() - this._timeStampLastShot > (1000 / setup.bombTimer)) { // && this.bombBuffer.length < setup.bombTimer) {
+  var enemiesCanShoot = [];
+  var enemyShootRandom;
+  //control limits of bombCounter
+  // if(this.bombCounter<0) {this.bombCounter=0;}
+  // if(this.bombCounter>this.bombMax){this.bombCounter=this.bombMax;}
+  //search enemies who can shoot
+  this.enemiesCollection.forEach(function (row) {
+    row.forEach(function (enemy) {
+      enemiesCanShoot.push(enemy);
+    }.bind(this));
+  }.bind(this));
+  //fire random in time 
+  if (Date.now() - this._timeStampLastShot > (3000 / setup.bombTimer)) {
     this._timeStampLastShot = Date.now();
-    shootOk = this.enemiesCollection[this.enemiesCollection.length - 1][Math.floor(Math.random() * (setup.enemiesInColumn - 1))].fire();
-    if (shootOk) {
-      if (this.bombCounter <= setup.bombMax) {
-        this.bombBuffer.push(shootOk);
-        this.bombCounter++;
-      }
-    }
-  }
+    enemyShootRandom = enemiesCanShoot[Math.floor(Math.random() * (enemiesCanShoot.length - 1))];
+   // if (this.bombCounter <= this.bombMax) {
+      shootOk = enemyShootRandom.fire();
 
+      if (shootOk) {
+        this.bombBuffer.push(shootOk);
+        //this.bombCounter++;
+      }
+    //}
+  }
 };
-// for (var col = 0; col < this.enemiesCollection.length; col++) {
-//   for (var row = 0; row < this.enemiesCollection[col].length; row++) {

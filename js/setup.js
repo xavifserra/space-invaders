@@ -1,8 +1,8 @@
 var setup = {
  //GAME
   // keysBuffer: [], //buffer of keys pressed. Global
-  bombBuffer: [], //buffer of bombs launched. Global
-  missileBuffer: [], //buffer of missiles launched. Global
+  //bombBuffer: [], //buffer of bombs launched. Global
+  //missileBuffer: [], //buffer of missiles launched. Global
   limitWidth: 800, //window.innerWidth,
   limitHeight: 600, //window.innerHeight,
   boardColor: 'black', //'#E3D4AB'
@@ -47,7 +47,7 @@ var setup = {
   bombWidth: 10,
   bombHeiht: 10,
   bombMax: 6,
-  bombTimer: 12,
+  bombTimer: 6,
   bombVelocity: 3,
   //SOUNDS
   soundsOfGame: {
