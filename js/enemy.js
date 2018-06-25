@@ -3,7 +3,6 @@ function Enemy(xPos, yPos, role) {
   this.type = undefined;
   this.color = undefined;
   this.points = undefined;
-  this.mask = undefined;
   this.x = xPos;
   this.y = yPos;
   this.width = setup.enemyWidth;
@@ -36,7 +35,7 @@ Enemy.prototype._selectRole = function (role) {
       this.color = setup.enemyL1Color;
       this.points = setup.enemyL1Points;
       break;
-    case 'veteran':
+      case 'veteran':
       this.type = role;
       this.color = setup.enemyL2Color;
       this.points = setup.enemyL2Points;
@@ -56,18 +55,4 @@ Enemy.prototype._selectRole = function (role) {
 
 Enemy.prototype.fire = function () {
     return new Projectile({ type: 'bomb', gunner: this });
-};
-
-Enemy.prototype.sprite = function () {
-  //llevar a la funcion de animación
-  var rows = 2;
-  var cols = 6;
-  var trackRight = 0;
-  var trackLeft = 1;
-  var widthFrame = spriteWidth / cols;
-  var heightFrame = spriteHeight / rows;
-  var currentFrame = 0;
-  var frameCount = 6;
-  var xSprite = 0;
-  var ySprite = 0;
 };

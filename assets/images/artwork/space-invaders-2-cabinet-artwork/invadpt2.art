@@ -1,0 +1,31 @@
+//
+//	[artname]:
+//		file       = [filename]
+//		alphafile  = [alphafilename]
+//		layer      = [backdrop|overlay|bezel|marquee|panel|side|flyer]
+//		position   = [left],[top],[right],[bottom]
+//		priority   = [priority]
+//		visible    = [visible]
+//		alpha      = [alpha]
+//		brightness = [brightness]
+//
+
+// thanks to Nathan Strum for the backdrop graphics
+backdrop:
+	file		= invaddlx.png
+	layer		= backdrop
+	priority	= -2
+	visible		= 1
+	position	= 0.0,-0.14,1.29,1.15
+
+// graphic work by Nicky Special
+// following part of the art file by drkmssh
+// http://www.drk-bezel.fr.st
+bezel:
+	file		= sidpt2.png
+	alphafile	= sidbmask.png
+	layer		= bezel
+	priority	= 0
+	visible		= 1
+	position	= -0.3333,-0.8206,1.7179,1.7851
+	brightness	= 1.0

@@ -1,14 +1,10 @@
 function Player(xPos, yPos) {
 
-  this.imageCenter = undefined;
-  this.imageLeft=setup.playerImage;
-  this.imageRight=setup.playerImage;
   this.x = xPos;
   this.y = yPos;
   this.width = setup.playerWidth;
   this.height = setup.playerHeiht;
-  this._timeStampLastShot = Date.now();
-  this.color=setup.playerColor;
+  this.color = setup.playerColor;
 }
 
 Player.prototype.goLeft = function () {
@@ -20,14 +16,9 @@ Player.prototype.goRight = function () {
 };
 
 Player.prototype.fire = function () {
-
-//  if (Date.now() - this._timeStampLastShot > (1000 / setup.missileMax)) {
-//    this._timeStampLastShot = Date.now();
-    return new Projectile({ type: 'missile', gunner: this });
-//  }
-//  else return false;
+  return new Projectile({
+    type: 'missile',
+    gunner: this
+  });
 };
 
-Player.prototype.kill=function(){
-
-};

@@ -105,15 +105,14 @@ Squad.prototype.atack = function () {
   var shootOK;
   var enemiesCanShoot = [];
   var enemyShootRandom;
-  //control limits of bombCounter
-  // if(this.bombCounter<0) {this.bombCounter=0;}
-  // if(this.bombCounter>this.bombMax){this.bombCounter=this.bombMax;}
+  
   //search enemies who can shoot
   this.enemiesCollection.forEach(function (row) {
     row.forEach(function (enemy) {
       enemiesCanShoot.push(enemy);
     }.bind(this));
   }.bind(this));
+  
   //fire random in time 
   if (Date.now() - this._timeStampLastShot > (3000 / setup.bombTimer)) {
     this._timeStampLastShot = Date.now();

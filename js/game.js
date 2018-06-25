@@ -70,7 +70,9 @@ Game.prototype._drawPlayer = function () {
   }
   this.ctx.fillStyle = this.player.color;
   this.ctx.fillRect(this.player.x, this.player.y, this.player.width, this.player.height);
-  //this.ctx.drawImage(this.player.imageCenter,0,0,40,40,this.player.x, this.player.y, this.player.width, this.player.height);
+  //this.ctx.clearRect(this.player.x, this.player.y, this.player.width, this.player.height);
+  //this.ctx.drawImage(this.player.sprite.image, this.player.X, this.player.Y, this.player.width, this.player.height, this.player.srcX, this.player.srcY, this.player.widthFrame, this.player.heightFrame);
+  //this.ctx.drawImage( this.player.image,this.player.x, this.player.y, this.player.width, this.player.height);
 };
 
 Game.prototype._playerFire = function () {
