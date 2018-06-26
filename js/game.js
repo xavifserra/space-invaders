@@ -1,150 +1,235 @@
-function Game(options) {
+function Game(ctx, keysBuffer) {
 
-  this.lives = 3;
+  this.live = 3;
   this.totalPoints = 0;
   this.level = 1;
   this.maxWidth = setup.limitWidth;
   this.maxHeight = setup.limitHeight;
-  this.ctx = options.ctx;
+  this.ctx = ctx;
+  this.keysBuffer = keysBuffer;
+  this.missileBuffer = [];
+  this.missileSpriteBuffer=[];
+  this.debug = true;
 
   //control of FPS
   this._timeStamp = Date.now();
+  this._timeStampMissile = Date.now();
   this._timeStampBoss = Date.now();
+
   //player & enemies
   this.boss = undefined;
-  this.player = options.player;
-  this.squad = options.squad;
+  this.player = new Player(setup.playerPosX(), setup.playerPosY());
+  this.squad = new Squad(setup.enemiesInRow, setup.enemiesInColumn);
+  //Sprites
+  this.playerSprite = new Sprite(setup.playerImage, 3, 3, 120, 129, 3);
+  this.bossSprite=undefined;
+  //sounds
+  this.soundOfShoot = new Sound(setup.soundsOfGame.soundShoot);
+  this.soundsOfExplosion = new Sound(setup.soundsOfGame.soundExplosion);
+  this.soundsOfEnemyKilled = new Sound(setup.soundsOfGame.soundEnemyKilled);
+  this.soundsOfBoss=new Sound(setup.soundsOfGame.soundBoss);
 }
-Game.prototype._intro = function () {
-
-
-};
-
-Game.prototype._splash = function () {
-
-
-};
-
-Game.prototype._assignEventsToKeys = function () {
-
-  window.addEventListener('keydown', function (e) {
-    setup.keysBuffer[e.code] = true;
-    console.log(e.code);
-  });
-
-  window.addEventListener('keyup', function (e) {
-    setup.keysBuffer[e.code] = false;
-  });
-};
 
 Game.prototype._manageBufferOfKeysPressed = function () {
-  var shotOk;//Control undefined shot by fps. if projectile not false  
+  var shootOk; //Control undefined shot by fps. if projectile not false  
 
-  if (setup.keysBuffer.KeyP) {     //key P => Pause
+  if (this.keysBuffer.KeyP) { //key P => Pause
+    //alert('presionada la P');
     console.log('game paused');
   }
-  if (setup.keysBuffer.Enter) {     //Key enter 
+  if (this.keysBuffer.Enter) { //Key enter 
 
   }
-  if (setup.keysBuffer.Space) {     //space => fire
-    shotOk = this.player.fire();
-    if (shotOk) { setup.missileBuffer.push(shotOk); }
+  if (this.keysBuffer.Space) { //space => fire
+    this._playerFire();
   }
-  if (setup.keysBuffer.ArrowLeft) { //arrow left
+  if (this.keysBuffer.ArrowLeft) { //arrow left
     this.player.goLeft();
+    this.playerSprite.updateFrame(1);
   }
-  if (setup.keysBuffer.ArrowRight) {//arrow right
+  if (this.keysBuffer.ArrowRight) { //arrow right
     this.player.goRight();
+    this.playerSprite.updateFrame(2);
   }
-  if (setup.keysBuffer.Space && setup.keysBuffer.ArrowLeft) { //left+fire
-    shotOk = this.player.fire();
-    if (shotOk) { setup.missileBuffer.push(shotOk); }
+  if (this.keysBuffer.Space && this.keysBuffer.ArrowLeft) { //left+fire
+    this._playerFire();
     this.player.goLeft();
+    this.playerSprite.updateFrame(1);
   }
-  if (setup.keysBuffer.Space && setup.keysBuffer.ArrowRight) { //right+fire
-    shotOk = this.player.fire();
-    if (shotOk) { setup.missileBuffer.push(shotOk); }
+  if (this.keysBuffer.Space && this.keysBuffer.ArrowRight) { //right+fire
+    this._playerFire();
     this.player.goRight();
+    this.playerSprite.updateFrame(2);
   }
 };
 
 Game.prototype._drawStars = function () {
   //TODO: make stars in the sky
-  this.ctx.fillStyle = setup.boardColor;
-  this.ctx.fillRect(0, 0, this.maxWidth, this.maxHeight);
+  this.ctx.clearRect(0, 0, this.maxWidth, this.maxHeight);
+  //this.ctx.fillStyle = setup.boardColor;
+  //this.ctx.fillRect(0, 0, this.maxWidth, this.maxHeight);
 };
 
 Game.prototype._drawPlayer = function () {
-  if (this.player.x < 1) { this.player.x = 1; }
+  if (this.player.x < 1) {
+    this.player.x = 1;
+  }
   if (this.player.x > this.maxWidth - this.player.width) {
     this.player.x = this.maxWidth - this.player.width;
   }
-  this.ctx.fillStyle = setup.playerColor;
-  this.ctx.fillRect(this.player.x, this.player.y, this.player.width, this.player.height);
+  //this.ctx.fillStyle = this.player.color;
+  //this.ctx.fillRect(this.player.x, this.player.y, this.player.width, this.player.height);
+  this.ctx.clearRect(this.player.x, this.player.y, this.player.width, this.player.height);
+  this.ctx.drawImage(this.playerSprite.image, this.playerSprite.srcX, this.playerSprite.srcY, this.playerSprite.widthFrame, this.playerSprite.heightFrame, this.player.x, this.player.y, this.player.width, this.player.height);
+  this.playerSprite.updateFrame(0);
+};
+
+Game.prototype._playerFire = function () {
+  
+  if (Date.now() - this._timeStampMissile > (1000 / setup.missileMax)) {
+    this._timeStampMissile = Date.now();
+    shootOk = this.player.fire();
+    if (shootOk) {
+      this.missileBuffer.push(shootOk);
+      this.missileSpriteBuffer.push(new Sprite(setup.missileImage,2,1,24,16,2));
+      this.soundOfShoot.play();
+    }
+  }
 };
 
 Game.prototype._drawBoss = function () {
   if (this.boss) {
     this.boss.goLeft();
-    this.ctx.fillStyle = setup.enemyBossColor;
-    this.ctx.fillRect(this.boss.x, this.boss.y, this.boss.width, this.boss.height);
-    if (this.boss.x < 0) {  //out of area
+    this.ctx.clearRect(this.boss.x, this.boss.y, this.boss.width, this.boss.height);
+    this.ctx.drawImage(this.bossSprite.image, this.bossSprite.srcX, this.bossSprite.srcY, this.bossSprite.widthFrame, this.bossSprite.heightFrame, this.boss.x, this.boss.y, this.boss.width, this.boss.height);
+    this.bossSprite.updateFrame(0);
+    this.soundsOfBoss.play();
+    // this.ctx.fillStyle = this.boss.color;
+    // this.ctx.fillRect(this.boss.x, this.boss.y, this.boss.width, this.boss.height);
+    if (this.boss.x < 0) { //out of area
       this.boss = undefined;
+      this.bossSprite=undefined;
     }
   }
 };
 
-Game.prototype._drawProjectile = function () {
+Game.prototype._drawMissile = function () {
   var missileSelected;
-  if (setup.missileBuffer.length > 0) {
-    //setup.missileBuffer.forEach(function (element)
-    for (var i = 0; i < setup.missileBuffer.length; i++) {
-      missileSelected = setup.missileBuffer[i];
+  var missileSpriteSelected;
+  if (this.missileBuffer.length > 0) {
+    //this.missileBuffer.forEach(function (element)
+    for (var i = 0; i < this.missileBuffer.length; i++) {
+      missileSelected = this.missileBuffer[i];
+      missileSpriteSelected= this.missileSpriteBuffer[i];
       if (missileSelected.y > 1 && missileSelected.y < setup.limitHeight) {
         missileSelected.trajectory();
-        this.ctx.fillStyle = missileSelected.color;
-        this.ctx.fillRect(missileSelected.x, missileSelected.y, missileSelected.width, missileSelected.height);
-      } else setup.missileBuffer.splice(i, 1);
-    }//.bind(this));
+        missileSpriteSelected.updateFrame(0);
+        this.ctx.clearRect(this.player.x, this.player.y, this.player.width, this.player.height);
+        this.ctx.drawImage(missileSpriteSelected.image, missileSpriteSelected.srcX, missileSpriteSelected.srcY, missileSpriteSelected.widthFrame, missileSpriteSelected.heightFrame, missileSelected.x, missileSelected.y, missileSelected.width, missileSelected.height);
+        // this.ctx.fillStyle = missileSelected.color;
+        // this.ctx.fillRect(missileSelected.x, missileSelected.y, missileSelected.width, missileSelected.height);      
+      } else {
+        this.missileBuffer.splice(i, 1);
+        this.missileSpriteBuffer.splice(i,1);
+      }
+    } //.bind(this));
+  }
+};
+
+Game.prototype._drawBomb = function () {
+  var bombSelected;
+
+  if (this.squad.bombBuffer.length > 0) {
+    for (var i = 0; i < this.squad.bombBuffer.length; i++) {
+      bombSelected = this.squad.bombBuffer[i];
+      if (bombSelected.y > 1 && bombSelected.y < this.maxHeight - 26) {
+        bombSelected.trajectory();
+        this.ctx.fillStyle = bombSelected.color;
+        this.ctx.fillRect(bombSelected.x, bombSelected.y, bombSelected.width, bombSelected.height);
+      } else {
+        this.squad.bombBuffer.splice(i, 1);
+        this.squad.bombCounter--;
+      }
+    }
   }
 };
 
 Game.prototype._drawSquad = function () {
-  var enemySelected;
 
-  for (var row = 0; row < this.squad.enemiesCollection.length; row++) {
-    for (var col = 0; col < this.squad.enemiesCollection[row].length; col++) {
-      enemySelected = this.squad.enemiesCollection[row][col];
-      if (enemySelected) {
-        this.ctx.fillStyle = enemySelected.color;
-        this.ctx.fillRect(enemySelected.x, enemySelected.y, enemySelected.width, enemySelected.height);
-      }
-    }
+  this.squad.enemiesCollection.forEach(function (row) {
+    row.forEach(function (enemy) {
+      this.ctx.fillStyle = enemy.color;
+      this.ctx.fillRect(enemy.x, enemy.y, enemy.width, enemy.height);
+    }.bind(this));
+  }.bind(this));
+
+  this.squad.move();
+  this.squad.atack();
+};
+
+Game.prototype._drawScore = function () {
+  this.ctx.font = "bold 20px Phosphate";
+  this.ctx.fillStyle = 'green';
+  this.ctx.fillText(`points: ${this.totalPoints}`, this.maxWidth / 10, this.maxHeight / 20 * 2);
+  this.ctx.fillText(`live: ${this.live}`, this.maxWidth / 10 * 8, this.maxHeight / 20 * 2);
+  if (this.debug) {
+    this.ctx.font = "16px Arial";
+    this.ctx.fillStyle = 'red';
+    this.ctx.fillText(`xMin: ${this.squad._xMinSquad} xMax: ${this.squad._xMaxSquad} yMax: ${this.squad._yMaxSquad} bombs: ${this.squad.bombBuffer.length}`, this.maxWidth / 10 * 4, this.maxHeight / 20);
   }
 };
 
 Game.prototype.checkCollisions = function () {
-  //TODO: collisions of bombs
-  // this.player 
-  if (setup.missileBuffer.length > 0) {
-    for (var i = 0; i < setup.missileBuffer.length; i++) {
-      missileSelected = setup.missileBuffer[i];
-      //Collision with bosses
-      if (this._checkCollision(missileSelected, this.boss)) {
-        this.totalPoints += this.boss.points();   //increment points 
-        setup.missileBuffer.splice(i, 1);         //destroy missile 
-        this.boss = undefined;                    //destroy boss
-        //TODO: explosion image + sound
+
+  // BOMBS <> PLAYER 
+  this.squad.bombBuffer.forEach(function (bomb) {
+    if (this._collision(bomb, this.player)) {
+      this.soundsOfExplosion.play();
+      this.squad.bombCounter--; //decrease bombs in game zone. can shoot to bombMax in the round  
+      this.live--;
+      console.log('GAME OVER');
+    }
+  }.bind(this));
+
+  //BOMB<>MISSILES
+  if (this.missileBuffer.length > 0 && this.squad.bombBuffer.length > 0) {
+    for (var bomb = 0; bomb < this.squad.bombBuffer.length; bomb++) {
+      for (var missile = 0; missile < this.missileBuffer.length; missile++) {
+        if (this._collision(this.squad.bombBuffer[bomb], this.missileBuffer[missile])) {
+          this.totalPoints+=this.squad.bombBuffer[bomb].points;
+          this.missileBuffer.splice(missile, 1); //destroy missile
+          this.squad.bombBuffer.splice(bomb, 1); //destroy bomb
+          this.squad.bombCounter--; //decrease bombs in game zone. can shoot to bombMax in the round  
+        }
       }
+    }
+  }
+
+  //COLLISION WITH ENEMIES
+  if (this.missileBuffer.length > 0) {
+    for (var missile = 0; missile < this.missileBuffer.length; missile++) {
+      missileSelected = this.missileBuffer[missile];
+      //Collision missile with bosses
+      if (this._collision(missileSelected, this.boss)) {
+        this.totalPoints += this.boss.points(); //increment points 
+        this.missileBuffer.splice(missile, 1); //destroy missile 
+        this.missileSpriteBuffer.splice(missile,1); //destry sprite
+        this.soundsOfEnemyKilled.play();
+        this.boss = undefined; //destroy boss
+        this.soundsOfEnemyKilled.play();
+      }
+      //collision missile with enemy
       for (var col = 0; col < this.squad.enemiesCollection.length; col++) {
         for (var row = 0; row < this.squad.enemiesCollection[col].length; row++) {
           enemySelected = this.squad.enemiesCollection[col][row];
           if (enemySelected) {
-            if (this._checkCollision(missileSelected, enemySelected)) {
-              this.totalPoints += enemySelected.points;   //increment points 
-              setup.missileBuffer.splice(i, 1);         //destroy missile 
-              delete this.squad.enemiesCollection[col][row];                    //destroy enemy
-              //TODO: explosion image + sound
+            if (this._collision(missileSelected, enemySelected)) {
+              this.totalPoints += enemySelected.points; //increment points 
+              this.missileBuffer.splice(missile, 1); //destroy missile 
+              this.missileSpriteBuffer.splice(missile,1); //destry sprite
+              this.squad.enemiesCollection[col].splice(row, 1); //destroy enemy
+              //delete this.squad.enemiesCollection[col][row]; //destroy enemy and maintain the structure
+              this.soundsOfEnemyKilled.play();
             }
           }
         }
@@ -153,9 +238,11 @@ Game.prototype.checkCollisions = function () {
   }
 };
 
-Game.prototype._checkCollision = function (object1, object2) {
+Game.prototype._collision = function (object1, object2) {
 
-  if (object1 === undefined || object2 === undefined) { return false; }
+  if (object1 === undefined || object2 === undefined) {
+    return false;
+  }
 
   this.x = object1.x;
   this.y = object1.y;
@@ -175,19 +262,7 @@ Game.prototype._checkCollision = function (object1, object2) {
   return false;
 };
 
-Game.prototype._drawScore = function () {
-  this.ctx.font = "bold 22px sans-serif";
-  this.ctx.fillStyle = 'green';
-  this.ctx.fillText('points: ' + this.totalPoints, 50, this.maxHeight - 10);
-
-};
-
-Game.prototype.pause = function () {
-
-};
-
 Game.prototype.init = function () {
-  this._assignEventsToKeys();
   this._update();
 };
 
@@ -200,16 +275,17 @@ Game.prototype._update = function () {
     this.checkCollisions();
     this._manageBufferOfKeysPressed();
     this._drawStars();
+    this._drawMissile();
+    this._drawBomb();
     this._drawPlayer();
     this._drawSquad();
     this._drawBoss();
-    this._drawProjectile();
     this._drawScore();
     //random boss in max.30s
     if (!this.boss && Date.now() - this._timeStampBoss > 30000 / setup.enemyBossTimer()) {
       this._timeStampBoss = Date.now();
-      this.boss = new Enemy(setup.limitWidth - 10, setup.limitHeight / 8, 'boss');//  Make the boss 
+      this.boss = new Enemy(setup.limitWidth - 10, setup.limitHeight / 8, 'boss'); //  Make the boss 
+      this.bossSprite=new Sprite(setup.enemyBossImage,1,3,120,43,3);
     }
-    //console.log('redraw');
   }
 };
