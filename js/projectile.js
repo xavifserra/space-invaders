@@ -4,8 +4,8 @@ function Projectile(options) {
   this.height = setup.misileHeiht;
   this.x = options.gunner.x + Math.floor(options.gunner.width / 2) - this.width / 2;
   this.y = options.gunner.y; //paint the shot in the middle of the player 
-  this.velocity=setup.missileVelocity;
-  this.image=setup.misileImage;
+  this.velocity = setup.missileVelocity;
+  this.image = setup.misileImage;
 }
 
 Projectile.prototype.trajectory = function () {
@@ -21,6 +21,7 @@ Projectile.prototype.trajectory = function () {
       this.color = setup.bombColor;
       this.width = setup.bombWidth;
       this.height = setup.bombHeiht;
+      this.points = setup.bombPoints;
       break;
   }
 };

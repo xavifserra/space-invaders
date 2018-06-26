@@ -1,19 +1,15 @@
-function Sprite(img, rows, cols, spritesSheetWith,spritesSheetHeight,frames, tracks) {
+function Sprite(img, rows, cols, spritesSheetWith, spritesSheetHeight, frames) {
   this.image = new Image();
   this.image.src = img;
   //  Rows and cols in the current spritesheet.
-  this.spriteRows = rows;
-  this.spriteCols = cols;
+  this.spriteSheetCols = cols;
+  this.spriteSheetRows = rows;
   // //Setting the width and height of our spritesheet.
   this.spriteSheetWidth = spritesSheetWith;
   this.spriteSheetHeight = spritesSheetHeight;
-  //Define the rows by movement.
-  this.tracks = tracks;
   //To get the width of a single sprite we divided the width of sprite with the number of cols.
-  // this.widthFrame = undefined;
-  // this.heightFrame = undefined;
-  this.widthFrame = this.spriteWidth / cols;
-  this.heightFrame = this.spriteHeight / rows;
+  this.widthFrame = this.spriteSheetWidth / this.spriteSheetCols;
+  this.heightFrame = this.spriteSheetHeight / this.spriteSheetRows;
   //Each row contains n frames and at the start we will display the first frame (assuming the index from 0).
   this.currentFrame = 0;
   this.frameCount = frames;
@@ -22,12 +18,18 @@ function Sprite(img, rows, cols, spritesSheetWith,spritesSheetHeight,frames, tra
   this.srcY = 0;
 }
 
-Sprite.prototype.updateFrame = function () {
+Sprite.prototype.updateFrame = function (strip) {
+
+  this.strip = strip;
   this.currentFrame = ++this.currentFrame % this.frameCount;
   this.srcX = this.currentFrame * this.widthFrame;
+  //Define the rows by movement.
+  this.srcY = strip * this.heightFrame;
 };
 
-Sprite.prototype.draw=function(ctx,x,y){
-
-  this.requestAnimationFrame(this.update);
-};
+// Sprite.prototype.draw = function () {
+//   //this.requestAnimationFrame(this.draw().bind(this));
+//   this.ctx.clearRect(x, y, width, height);
+//   this.updateFrame(strip);
+//   this.ctx.drawImage(this.character, this.srcX, this.srcY, this.widthFrame, this.heightFrame, this.x, this.y, this.width, this.height);
+// };
