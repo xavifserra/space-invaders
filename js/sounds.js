@@ -1,22 +1,16 @@
 function Sound(src) {
-
+  this.audio = undefined;
   this.init(src);
 }
 
 Sound.prototype.init = function (src) {
-  this.sound = document.createElement("audio");
-  this.sound.src=src;
-  this.sound.setAttribute("preload", "auto");
-  this.sound.setAttribute("controls", "none");
-  this.sound.style.display = "none";
-  document.body.appendChild(this.sound);
-  
+  this.audio = new Audio(src);
 };
 
 Sound.prototype.play = function () {
-  this.sound.play();
+  this.audio.play();
 };
 
 Sound.prototype.stop = function () {
-  this.sound.pause();
+  this.audio.pause();
 };
