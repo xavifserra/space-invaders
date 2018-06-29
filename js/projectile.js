@@ -5,7 +5,16 @@ function Projectile(options) {
   this.x = options.gunner.x + Math.floor(options.gunner.width / 2) - this.width / 2;
   this.y = options.gunner.y; //paint the shot in the middle of the player 
   this.velocity = setup.missileVelocity;
-  this.image = setup.misileImage;
+  this.weapon = undefined;
+
+  switch (this.type) {
+    case 'missile':
+      this.weapon = new Sprite(setup.missileImage, 1, 4, 97, 25, 4);
+      break;
+    case 'bomb':
+      this.weapon = new Sprite(setup.bombImage, 1, 4, 96, 25, 4);
+      break;
+  }
 }
 
 Projectile.prototype.trajectory = function () {
@@ -24,4 +33,8 @@ Projectile.prototype.trajectory = function () {
       this.points = setup.bombPoints;
       break;
   }
+};
+
+Projectile.prototype.drawSprite = function (ctx) {
+  this.weapon.draw(ctx, this.x, this.y, this.width, this.height);
 };

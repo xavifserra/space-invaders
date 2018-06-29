@@ -84,16 +84,16 @@ Squad.prototype.move = function () {
 Squad.prototype._moveSquadTo = function (direction) {
 
   this.enemiesCollection.forEach(function (row) {
-    row.forEach(function (element) {
+    row.forEach(function (enemy) {
       switch (direction) {
         case 'right':
-          element.goRight();
+          enemy.goRight();
           break;
         case 'left':
-          element.goLeft();
+          enemy.goLeft();
           break;
         case 'down':
-          element.goDown();
+          enemy.goDown();
           break;
       }
     }.bind(this));
@@ -101,29 +101,26 @@ Squad.prototype._moveSquadTo = function (direction) {
 };
 
 Squad.prototype.atack = function () {
-  //TODO: dispara desde la clase
-  var shootOK;
+  //var shootOK;
   var enemiesCanShoot = [];
   var enemyShootRandom;
-  
+
   //search enemies who can shoot
   this.enemiesCollection.forEach(function (row) {
     row.forEach(function (enemy) {
       enemiesCanShoot.push(enemy);
     }.bind(this));
   }.bind(this));
-  
+
   //fire random in time 
   if (Date.now() - this._timeStampLastShot > (3000 / setup.bombTimer)) {
     this._timeStampLastShot = Date.now();
     enemyShootRandom = enemiesCanShoot[Math.floor(Math.random() * (enemiesCanShoot.length - 1))];
-   // if (this.bombCounter <= this.bombMax) {
-      shootOk = enemyShootRandom.fire();
-
-      if (shootOk) {
-        this.bombBuffer.push(shootOk);
-        //this.bombCounter++;
-      }
-    //}
+    //shootOk = enemyShootRandom.fire();
+    this.bombBuffer.push(enemyShootRandom.fire());
+    
+    // if (shootOk) {
+    //   this.bombBuffer.push(shootOk);
+    // }
   }
 };
