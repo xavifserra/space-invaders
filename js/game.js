@@ -11,6 +11,7 @@ function Game(ctx, keysBuffer) {
   this.debug = true;
   this.isPaused = false;
   this.idAnimation = undefined;
+  this.state = 'play'; //valid: 'play','pause','win','lost' 
 
   //control of FPS
   this._timeStamp = Date.now();
@@ -33,15 +34,7 @@ function Game(ctx, keysBuffer) {
 Game.prototype.manageBufferOfKeysPressed = function () {
 
   if (this.keysBuffer.KeyP) { //key P => Pause
-    this.ctx.font = "bold 80px Phosphate";
-    this.ctx.fillStyle = 'red';
-    this.ctx.fillText('GAME PAUSED', this.maxWidth / 5, this.maxHeight / 2);
-    this.ctx.font = "bold 30px Phosphate";
-    this.ctx.fillText('press SPACE to return', this.maxWidth / 3, this.maxHeight / 5 * 3);
-    this.isPaused = !this.isPaused;
-  }
-  if (this.keysBuffer.KeyP && this.isPaused) {
-    this.isPaused = !this.isPaused;
+    this.state = 'pause';
   }
 
   if (this.keysBuffer.Enter) { //Key enter 
@@ -80,32 +73,27 @@ Game.prototype.drawPlayer = function () {
   if (this.player.x > this.maxWidth - this.player.width) {
     this.player.x = this.maxWidth - this.player.width;
   }
-  this.player.drawSprite(this.ctx);
+  this.player.draw(this.ctx);
   //this.ctx.fillStyle = this.player.color;
   //this.ctx.fillRect(this.player.x, this.player.y, this.player.width, this.player.height);
 };
 
 Game.prototype.playerFire = function () {
-  var shootOk; //Control undefined shot by fps. if projectile not false  
-
   if (Date.now() - this._timeStampMissile > (1000 / setup.missileMax)) {
     this._timeStampMissile = Date.now();
-    shootOk = this.player.fire();
-    if (shootOk) {
-      this.missileBuffer.push(shootOk);
-      this.soundOfShoot.play();
-    }
+    this.missileBuffer.push(this.player.fire());
+    this.soundOfShoot.play();
   }
 };
 
 Game.prototype.drawBoss = function () {
   if (this.boss) {
     this.boss.goLeft();
-    this.boss.drawSprite(this.ctx);
+    this.boss.draw(this.ctx);
     // this.ctx.fillStyle = this.boss.color;
     // this.ctx.fillRect(this.boss.x, this.boss.y, this.boss.width, this.boss.height);
     this.soundOfBoss.play();
-    if (this.boss.x < 0 || this.boss.state==='destroy') { //out of area
+    if (this.boss.x < 0 || this.boss.state === 'destroy') { //out of area
       this.boss = undefined;
     }
   }
@@ -117,7 +105,7 @@ Game.prototype.drawMissile = function () {
     this.missileBuffer.forEach(function (missile, index) {
       if (missile.y > 1 && missile.y < this.maxHeight) {
         missile.trajectory();
-        missile.drawSprite(this.ctx);
+        missile.draw(this.ctx);
         // this.ctx.fillStyle = missile.color;
         // this.ctx.fillRect(missile.x, missile.y, missile.width, missile.height);      
       } else {
@@ -133,7 +121,7 @@ Game.prototype.drawBomb = function () {
     this.squad.bombBuffer.forEach(function (bomb, index) {
       if (bomb.y > 1 && bomb.y < this.maxHeight - 26) {
         bomb.trajectory();
-        bomb.drawSprite(this.ctx);
+        bomb.draw(this.ctx);
         // this.ctx.fillStyle = bomb.color;
         // this.ctx.fillRect(bomb.x, bomb.y, bomb.width, bomb.height);
       } else {
@@ -151,7 +139,7 @@ Game.prototype.drawSquad = function () {
       if (enemy.state === 'destroy') {
         this.squad.enemiesCollection[indexRow].splice(indexEnemy, 1); //destroy enemy
       }
-      enemy.drawSprite(this.ctx);
+      enemy.draw(this.ctx);
       // this.ctx.fillStyle = enemy.color;
       // this.ctx.fillRect(enemy.x, enemy.y, enemy.width, enemy.height);
     }.bind(this));
@@ -176,16 +164,14 @@ Game.prototype.drawScore = function () {
 Game.prototype.checkCollisions = function () {
 
   //   COLLISION BOMB WITH OTHERS 
-  this.squad.bombBuffer.forEach(function (bomb,indexBomb) {
+  this.squad.bombBuffer.forEach(function (bomb, indexBomb) {
     //Collision bomb with player
     if (this._collision(bomb, this.player)) {
-      this.squad.bombBuffer.splice(indexBomb,1);
+      this.squad.bombBuffer.splice(indexBomb, 1);
       this.soundOfExplosion.play();
       this.squad.bombCounter--; //decrease bombs in game zone. can shoot to bombMax in the round  
       this.live--;
-      this.player.state='hit';
-      console.log('GAME OVER');
-      //TODO: resolver cambio vida
+      this.player.state = 'hit';
     }
 
     //BOMB<>MISSILES
@@ -210,14 +196,13 @@ Game.prototype.checkCollisions = function () {
     if (this._collision(missile, this.boss)) {
       this.totalPoints += this.boss.points(); //increment points 
       this.missileBuffer.splice(indexMissile, 1); //destroy missile     
-      this.boss.state = 'hit';  
+      this.boss.state = 'hit';
       this.soundOfEnemyKilled.play();
       //this.boss = undefined; //destroy boss
-      this.soundOfEnemyKilled.play();
     }
     //collision missile with enemy
-    this.squad.enemiesCollection.forEach(function (row, indexRow) {
-      row.forEach(function (enemy, indexEnemy) {
+    this.squad.enemiesCollection.forEach(function (squadRow, indexRow) {
+      squadRow.forEach(function (enemy, indexEnemy) {
         if (this._collision(missile, enemy)) {
           this.totalPoints += enemy.points; //increment points 
           this.missileBuffer.splice(indexMissile, 1); //destroy missile 
@@ -228,6 +213,7 @@ Game.prototype.checkCollisions = function () {
       }.bind(this));
     }.bind(this));
   }.bind(this));
+
 };
 
 Game.prototype._collision = function (object1, object2) {
@@ -261,6 +247,13 @@ Game.prototype.init = function () {
 Game.prototype._update = function () {
 
   this.idAnimation = requestAnimationFrame(this._update.bind(this)); //sustituye al setinterval y presenta 60frm/sec
+  if (this.player.state === 'destroy') {
+    this.state = 'lost';
+    console.log('GAME OVER');
+  } //TODO: resolver cambio vida
+  if (this.squad.isDestroyed() && !this.boss) { //destroyed squad and bosses
+    this.state = 'win';
+  }
 
   if ((Date.now() - this._timeStamp) > (1000 / setup.fps)) {
 

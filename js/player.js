@@ -6,18 +6,18 @@ function Player(xPos, yPos) {
   this.height = setup.playerHeiht;
   this.color = setup.playerColor;
   this.character = new Sprite(setup.playerImage, 3, 3, 120, 129, 3);
-  this.explosion = new Sprite(setup.explosion1Image, 1, 10, 1280, 128, 10);
+  this.explosion = new Sprite(setup.explosionImage, 1, 24, 3120, 130, 24); //1, 10, 1280, 128, 10);
   this.state = 'combat';
 }
 
 Player.prototype.goLeft = function () {
   this.x -= 5;
-  this.character.selectStrip(1);
+  this.character.selectStrip(1); //Select the strip who is drawed the left movement
 };
 
 Player.prototype.goRight = function () {
   this.x += 5;
-  this.character.selectStrip(2);
+  this.character.selectStrip(2); //Select the strip who is drawed the left movement
 };
 
 Player.prototype.fire = function () {
@@ -27,7 +27,7 @@ Player.prototype.fire = function () {
   });
 };
 
-Player.prototype.drawSprite = function (ctx) {
+Player.prototype.draw = function (ctx) {
 
   switch (this.state) {
     case 'combat':
@@ -35,8 +35,8 @@ Player.prototype.drawSprite = function (ctx) {
       this.character.selectStrip(0);
       break;
     case 'hit':
-      this.explosion.draw(ctx, this.x, this.y, this.width, this.height);
-      if (this.explosion.currentFrame<=this.explosion.framesTotal) {
+      this.explosion.draw(ctx, this.x - this.width / 2, this.y - this.height / 2, this.width * 2, this.height * 2);
+      if (this.explosion.currentFrame>=this.explosion.framesTotal-1 ) {
         this.state = 'destroy';
       }
       break;
