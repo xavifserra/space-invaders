@@ -1,6 +1,5 @@
 function Game(ctx, keysBuffer) {
 
-  this.live = 3;
   this.totalPoints = 0;
   this.level = 1;
   this.maxWidth = setup.limitWidth;
@@ -9,8 +8,6 @@ function Game(ctx, keysBuffer) {
   this.keysBuffer = keysBuffer;
   this.missileBuffer = [];
   this.debug = true;
-  this.isPaused = false;
-  this.idAnimation = undefined;
   this.state = 'play'; //valid: 'play','pause','win','lost' 
 
   //control of FPS
@@ -22,6 +19,9 @@ function Game(ctx, keysBuffer) {
   this.boss = undefined;
   this.player = new Player(setup.playerPosX(), setup.playerPosY());
   this.squad = new Squad(setup.enemiesInRow, setup.enemiesInColumn);
+  //lives
+  this.livesOfPlayer = live.lives;
+  this.livesCounter = new Sprite(live.image, live.rows, live.cols, live.width, live.height, live.frames);
 
   //sounds
   this.soundOfShoot = new Sound(sounds.soundShoot);
@@ -59,7 +59,7 @@ Game.prototype.manageBufferOfKeysPressed = function () {
   }
 };
 
-Game.prototype.drawStars = function () {
+Game.prototype.drawSky = function () {
   //TODO: make stars in the sky
   this.ctx.clearRect(0, 0, this.maxWidth, this.maxHeight);
   //this.ctx.fillStyle = setup.boardColor;
@@ -153,11 +153,15 @@ Game.prototype.drawScore = function () {
   this.ctx.font = "bold 20px Phosphate";
   this.ctx.fillStyle = 'green';
   this.ctx.fillText(`points: ${this.totalPoints}`, this.maxWidth / 10, this.maxHeight / 20 * 2);
-  this.ctx.fillText(`live: ${this.live}`, this.maxWidth / 10 * 8, this.maxHeight / 20 * 2);
+  this.ctx.fillText(`live: ${this.livesOfPlayer}`, this.maxWidth / 10 * 8, this.maxHeight / 20 * 2);
+  this.livesCounter.drawStrip(this.ctx, this.maxWidth / 10 * 9, this.maxHeight / 20 *1.5, 
+                          this.livesCounter.widthFrame/2, this.livesCounter.heightFrame/2, this.livesOfPlayer);
+  //TODO: lives graphic
   if (this.debug) {
-    this.ctx.font = "16px Arial";
-    this.ctx.fillStyle = 'red';
-    this.ctx.fillText(`xMin: ${this.squad._xMinSquad} xMax: ${this.squad._xMaxSquad} yMax: ${this.squad._yMaxSquad} bombs: ${this.squad.bombBuffer.length}`, this.maxWidth / 10 * 4, this.maxHeight / 20);
+    this.ctx.font = "9px Arial";
+    this.ctx.fillStyle = 'white';
+    this.ctx.fillText(`xMin: ${this.squad._xMinSquad} xMax: ${this.squad._xMaxSquad} yMax: ${this.squad._yMaxSquad} 
+                      bombs: ${this.squad.bombBuffer.length}`, this.maxWidth / 10 * 4, this.maxHeight / 20);
   }
 };
 
@@ -170,7 +174,7 @@ Game.prototype.checkCollisions = function () {
       this.squad.bombBuffer.splice(indexBomb, 1);
       this.soundOfExplosion.play();
       this.squad.bombCounter--; //decrease bombs in game zone. can shoot to bombMax in the round  
-      this.live--;
+      this.livesOfPlayer--;
       this.player.state = 'hit';
     }
 
@@ -241,26 +245,32 @@ Game.prototype._collision = function (object1, object2) {
 };
 
 Game.prototype.init = function () {
-  this._update();
+  this.draw();
 };
 
-Game.prototype._update = function () {
+Game.prototype.draw = function () {
 
-  this.idAnimation = requestAnimationFrame(this._update.bind(this)); //sustituye al setinterval y presenta 60frm/sec
+  //this.idAnimation = requestAnimationFrame(this._update.bind(this)); //sustituye al setinterval y presenta 60frm/sec
   if (this.player.state === 'destroy') {
     this.state = 'lost';
     console.log('GAME OVER');
-  } //TODO: resolver cambio vida
+  }
+
   if (this.squad.isDestroyed() && !this.boss) { //destroyed squad and bosses
     this.state = 'win';
   }
 
-  if ((Date.now() - this._timeStamp) > (1000 / setup.fps)) {
+  //random boss in max.30s
+  if (!this.boss && Date.now() - this._timeStampBoss > 30000 / setup.enemyBossTimer()) {
+    this._timeStampBoss = Date.now();
+    this.boss = new Enemy(this.maxWidth - 10, this.maxHeight / 8, 'boss'); //  Make the boss 
+  }
 
+  if ((Date.now() - this._timeStamp) > (1000 / setup.fps)) {
     this.manageBufferOfKeysPressed();
     if (!this.isPaused) {
       this._timeStamp = Date.now();
-      this.drawStars();
+      this.drawSky();
       this.drawMissile();
       this.drawBomb();
       this.drawPlayer();
@@ -270,11 +280,4 @@ Game.prototype._update = function () {
       this.drawScore();
     }
   }
-
-  //random boss in max.30s
-  if (!this.boss && Date.now() - this._timeStampBoss > 30000 / setup.enemyBossTimer()) {
-    this._timeStampBoss = Date.now();
-    this.boss = new Enemy(this.maxWidth - 10, this.maxHeight / 8, 'boss'); //  Make the boss 
-  }
-
 };

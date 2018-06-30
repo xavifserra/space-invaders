@@ -6,7 +6,7 @@ function Player(xPos, yPos) {
   this.height = setup.playerHeiht;
   this.color = setup.playerColor;
   this.character = new Sprite(setup.playerImage, 3, 3, 120, 129, 3);
-  this.explosion = new Sprite(setup.explosionImage, 1, 24, 3120, 130, 24); //1, 10, 1280, 128, 10);
+  this.explosion = new Sprite(explosions.type1.image, explosions.type1.rows, explosions.type1.cols, explosions.type1.width, explosions.type1.height, explosions.type1.frames); //1, 10, 1280, 128, 10);
   this.state = 'combat';
 }
 

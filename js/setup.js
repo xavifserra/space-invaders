@@ -6,8 +6,7 @@ var setup = {
   fps: 20, //frames per second in game
   fpsSprite: 25,
   stateOfGame: 'intro',
-  imagePause: '',
-  
+
   //player
   playerColor: 'red',
   playerWidth: 40,
@@ -35,7 +34,7 @@ var setup = {
   //enemy Level1
   enemyL1Color: '#33CC33',
   enemyL1Points: 15,
-  enemyL1Image: 'assets/img/enemyrookie.png',//'assets/img/enemyRookie.png',
+  enemyL1Image: 'assets/img/enemyrookie.png', //'assets/img/enemyRookie.png',
   //BOSS
   enemyBossWidth: 63,
   enemyBossHeiht: 40,
@@ -66,14 +65,6 @@ var setup = {
   bombVelocity: 3,
   bombPoints: 5,
   bombImage: 'assets/img/bomb.png',
-  //explosions 
-  explosionWidth: 45,
-  explosionHeight: 45,
-  explosionImage: 'assets/img/explosionbig.png',
-  explosion1Width: 45,
-  explosion1Height: 45,
-  explosion1Image: 'assets/img/explosion-128x128x7.png',
-  imagesOfGame: [],
 };
 //SOUNDS
 var sounds = {
@@ -84,28 +75,53 @@ var sounds = {
   soundHit: 'assets/sounds/Blaster Hit.mp3'
 };
 
-var actors = [{
-    name: 'player'
+//explosions 
+var explosions = {
+  type1: {
+    rows: 1,
+    cols: 24,
+    frames: 24,
+    width: 3120,
+    height: 130,
+    image: 'assets/img/explosion-3120x130x24.png',
   },
-  {
-    name: 'boss'
+  type2: {
+    rows: 1,
+    cols: 10,
+    frames: 10,
+    width: 1280,
+    height: 128,
+    image: 'assets/img/explosion-1280x128x10.png',
   },
-  {
-    name: 'official'
-  },
-  {
-    name: 'veteran'
-  },
-  {
-    name: 'rookie'
-  },
-];
+  type3: {
+    rows: 1,
+    cols: 9,
+    frames: 9,
+    width: 648,
+    height: 72,
+    image: 'assets/img/explosion-648x72x9.png',
+  }
+};
+//LIVE
+var live = {
+  lives: 3,
+  rows: 4,
+  cols: 1,
+  frames: 4,
+  width: 120,
+  height: 144,
+  image: 'assets/img/lives-120x144x4.png',
+};
+//actors
+var actors = {
+  player: {},
+  boss: {},
+  official: {},
+  veteran: {},
+  rookie: {},
+};
 
-var weapons = [{
-    name: 'missile'
-  },
-  {
-    name: 'bomb'
-  },
-
-];
+var weapons = {
+  missile: {},
+  bomb: {},
+};
