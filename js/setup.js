@@ -7,6 +7,7 @@ var setup = {
   fpsSprite: 25,
   stateOfGame: 'intro',
   imagePause: '',
+  
   //player
   playerColor: 'red',
   playerWidth: 40,
@@ -68,7 +69,7 @@ var setup = {
   //explosions 
   explosionWidth: 45,
   explosionHeight: 45,
-  explosionImage: 'assets/img/explosion.png',
+  explosionImage: 'assets/img/explosionbig.png',
   explosion1Width: 45,
   explosion1Height: 45,
   explosion1Image: 'assets/img/explosion-128x128x7.png',

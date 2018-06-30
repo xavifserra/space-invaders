@@ -38,3 +38,4 @@ Sprite.prototype.draw = function (ctx, x, y, width, height) {
     //this.ctx.fillStyle = 'blue';
     //this.ctx.fillRect(this.obj.x, this.obj.y, this.obj.width, this.obj.height);
 };
+

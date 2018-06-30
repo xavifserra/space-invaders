@@ -124,3 +124,7 @@ Squad.prototype.atack = function () {
     // }
   }
 };
+
+Squad.prototype.isDestroyed=function(){
+  return this.enemiesCollection.length===0;
+};

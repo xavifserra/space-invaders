@@ -35,6 +35,6 @@ Projectile.prototype.trajectory = function () {
   }
 };
 
-Projectile.prototype.drawSprite = function (ctx) {
+Projectile.prototype.draw = function (ctx) {
   this.weapon.draw(ctx, this.x, this.y, this.width, this.height);
 };

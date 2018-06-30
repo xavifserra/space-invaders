@@ -9,7 +9,7 @@ function Enemy(xPos, yPos, role) {
   this.height = setup.enemyHeiht;
   this.enemyVelocity = setup.enemyVelocity;
   this._selectRole(role);
-  this.explosion = new Sprite(setup.explosionImage, 1, 10, 1280, 128, 10);
+  this.explosion = new Sprite(setup.explosion1Image, 1, 10, 1280, 128, 10);
   this.state = 'combat';
   this._timeStampSprite = Date.now();
 }
@@ -47,7 +47,7 @@ Enemy.prototype._selectRole = function (role) {
       this.type = role;
       this.color = setup.enemyL2Color;
       this.points = setup.enemyL2Points;
-      this.character = new Sprite(setup.enemyL2Image, 1, 3, 69, 24, 3);
+      this.character = new Sprite(setup.enemyL2Image, 1, 3, 69, 24, 3);//TODO: cambiar num por var
       break;
     case 'official':
       this.type = role;
@@ -73,7 +73,7 @@ Enemy.prototype.fire = function () {
   });
 };
 
-Enemy.prototype.drawSprite = function (ctx) {
+Enemy.prototype.draw = function (ctx) {
 
   switch (this.state) {
     case 'combat':
@@ -81,8 +81,8 @@ Enemy.prototype.drawSprite = function (ctx) {
       this.character.selectStrip(0);
       break;
     case 'hit':
-      this.explosion.draw(ctx, this.x, this.y, this.width, this.height);
-      if (this.explosion.currentFrame<=this.explosion.framesTotal) {
+      this.explosion.draw(ctx, this.x-this.width/2, this.y-this.height/2, this.width*2, this.height*2);
+      if (this.explosion.currentFrame>=this.explosion.framesTotal-1 ) {
         this.state = 'destroy';
       }
       break;
