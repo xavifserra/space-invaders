@@ -2,20 +2,23 @@ function Player(xPos, yPos) {
 
   this.x = xPos;
   this.y = yPos;
+  this.xOld=this.x;
   this.width = setup.playerWidth;
   this.height = setup.playerHeiht;
   this.color = setup.playerColor;
   this.character = new Sprite(setup.playerImage, 3, 3, 120, 129, 3);
   this.explosion = new Sprite(explosions.type1.image, explosions.type1.rows, explosions.type1.cols, explosions.type1.width, explosions.type1.height, explosions.type1.frames); //1, 10, 1280, 128, 10);
-  this.state = 'combat';
+  this.state = 'combat';  //valid: combat, hit, destroy
 }
 
 Player.prototype.goLeft = function () {
+  this.xOld=this.x;
   this.x -= 5;
   this.character.selectStrip(1); //Select the strip who is drawed the left movement
 };
 
 Player.prototype.goRight = function () {
+  this.xOld=this.x;
   this.x += 5;
   this.character.selectStrip(2); //Select the strip who is drawed the left movement
 };

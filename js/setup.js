@@ -5,8 +5,10 @@ var setup = {
   boardColor: 'black', //'#E3D4AB'
   fps: 20, //frames per second in game
   fpsSprite: 25,
+  offsetSprite: 5,
   stateOfGame: 'intro',
-
+  lives: 3,
+  
   //player
   playerColor: 'red',
   playerWidth: 40,
@@ -68,11 +70,12 @@ var setup = {
 };
 //SOUNDS
 var sounds = {
-  soundShoot: 'assets/sounds/shoot.mp3',
-  soundExplosion: 'assets/sounds/explosion.mp3',
-  soundEnemyKilled: 'assets/sounds/invaderkilled.mp3',
-  soundBoss: 'assets/sounds/ufo_lowpitch.mp3',
-  soundHit: 'assets/sounds/Blaster Hit.mp3'
+  shoot: 'assets/sounds/shoot.mp3',
+  explosion: 'assets/sounds/explosion.mp3',
+  enemyKilled: 'assets/sounds/invaderkilled.mp3',
+  boss: 'assets/sounds/ufo_lowpitch.mp3',
+  bossExplode: 'assets/sounds/explosion.mp3',
+  hit: 'assets/sounds/Blaster Hit.mp3',
 };
 
 //explosions 
@@ -103,8 +106,7 @@ var explosions = {
   }
 };
 //LIVE
-var live = {
-  lives: 3,
+var liveScore = {
   rows: 4,
   cols: 1,
   frames: 4,
@@ -113,13 +115,11 @@ var live = {
   image: 'assets/img/lives-120x144x4.png',
 };
 //actors
-var actors = {
-  player: {},
-  boss: {},
-  official: {},
-  veteran: {},
-  rookie: {},
-};
+  player1= {};
+  boss= {};
+  official= {};
+  veteran= {};
+  rookie= {};
 
 var weapons = {
   missile: {},

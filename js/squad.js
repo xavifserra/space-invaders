@@ -1,4 +1,4 @@
-function Squad(rowsOfEnemies, columnsOfEnemies) {
+function Squad() {
   this.enemiesCollection = [];
   this.bombBuffer = [];
   //this._enemiesCoordinates = [];
@@ -11,7 +11,7 @@ function Squad(rowsOfEnemies, columnsOfEnemies) {
   this._goToRight = true;
   this._goToLeft = false;
   //fill the squad
-  this._enroll(rowsOfEnemies, columnsOfEnemies);
+  this._enroll(setup.enemiesInRow, setup.enemiesInColumn);
   this._timeStampLastShot = Date.now();
   // this.bombCounter = 0;
   this.bombMax = setup.bombMax;
