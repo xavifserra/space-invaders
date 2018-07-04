@@ -112,20 +112,11 @@ Squad.prototype.atack = function () {
     }.bind(this));
   }.bind(this));
 
-  //fire random in time 
-  if (Date.now() - this._timeStampLastShot > (3000 / setup.bombTimer)) {
-    this._timeStampLastShot = Date.now();
-    enemyShootRandom = enemiesCanShoot[Math.floor(Math.random() * (enemiesCanShoot.length - 1))];
-    //shootOk = enemyShootRandom.fire();
-    this.bombBuffer.push(enemyShootRandom.fire());
-    
-    // if (shootOk) {
-    //   this.bombBuffer.push(shootOk);
-    // }
-  }
+  enemyShootRandom = enemiesCanShoot[Math.floor(Math.random() * (enemiesCanShoot.length - 1))];
+  //shootOk = enemyShootRandom.fire();
+  this.bombBuffer.push(enemyShootRandom.fire());
 };
 
-Squad.prototype.isDestroyed=function(){
-  return this.enemiesCollection.length===0;
+Squad.prototype.isDestroyed = function () {
+  return this.enemiesCollection.length === 0;
 };
-

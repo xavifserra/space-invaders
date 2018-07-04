@@ -13,12 +13,10 @@ KeyControl.prototype._assignEventsToKeys = function () {
   window.addEventListener('keydown', function (e) {
     this.keysBuffer[e.code] = true;
     this.keyCode = e.code;
-    console.log(e.code);
   }.bind(this));
 
   window.addEventListener('keyup', function (e) {
     this.keysBuffer[e.code] = false;
-    console.log(e.code);
   }.bind(this));
 
   //control GAMEPAD PS3

@@ -8,17 +8,14 @@ var setup = {
   offsetSprite: 5,
   stateOfGame: 'intro',
   lives: 3,
-  
+  imageOfBackground: "assets/img/background.png",
+
   //player
   playerColor: 'red',
   playerWidth: 40,
   playerHeiht: 40,
-  playerPosX: function () {
-    return setup.limitWidth / 2;
-  },
-  playerPosY: function () {
-    return setup.limitHeight - 50;
-  },
+  playerPosX: function () { return setup.limitWidth / 2; },
+  playerPosY: function () { return setup.limitHeight - 50; },
   playerImage: 'assets/img/ship.png',
   //enemy 
   enemyWidth: 25,
@@ -36,21 +33,17 @@ var setup = {
   //enemy Level1
   enemyL1Color: '#33CC33',
   enemyL1Points: 15,
-  enemyL1Image: 'assets/img/enemyrookie.png', //'assets/img/enemyRookie.png',
+  enemyL1Image: 'assets/img/enemyrookie.png',
   //BOSS
   enemyBossWidth: 63,
   enemyBossHeiht: 40,
   enemyBossColor: '#0000FF',
-  enemyBossTimer: function () {
-    return Math.random() * (1 - 0.5) + 0.5;
-  }, //random min 15s max 30s in timer 30000
-  enemyBossPoints: function () {
-    return Math.floor(Math.random() * 250);
-  },
+  enemyBossTimer: function () { return Math.random() * (1 - 0.5) + 0.5; }, //random min 15s max 30s in timer 30000
+  enemyBossPoints: function () { return Math.floor(Math.random() * 250); },
   enemyBossImage: 'assets/img/boss.png',
   //SQUAD
-  enemiesInRow: 5,
-  enemiesInColumn: 11,
+  enemiesInRow: 5, //always 5
+  enemiesInColumn: 12, //can select quantity of columns
   //Projectiles
   missileColor: 'green',
   missileWidth: 24,
@@ -68,6 +61,7 @@ var setup = {
   bombPoints: 5,
   bombImage: 'assets/img/bomb.png',
 };
+
 //SOUNDS
 var sounds = {
   shoot: 'assets/sounds/shoot.mp3',
@@ -115,11 +109,11 @@ var liveScore = {
   image: 'assets/img/lives-120x144x4.png',
 };
 //actors
-  player1= {};
-  boss= {};
-  official= {};
-  veteran= {};
-  rookie= {};
+player1 = {};
+boss = {};
+official = {};
+veteran = {};
+rookie = {};
 
 var weapons = {
   missile: {},

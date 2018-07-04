@@ -24,19 +24,14 @@ div.container {
   align-self: auto;
 }
 
-div.title {
-  display: flex;
-  align-items: center;
-}
-
 img.logo {
   width: 15%;
   height: 15%;
 }
 
-#game-zone {
+/* #game-zone {
   align-self: auto;
-}
+} */
 
 div.stars {
   width: 800px;

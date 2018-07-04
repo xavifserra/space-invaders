@@ -60,7 +60,7 @@ Enemy.prototype._selectRole = function (role) {
     case 'boss':
       this.type = role;
       this.color = setup.enemyBossColor;
-      this.points = setup.enemyBossPoints;
+      this.points = setup.enemyBossPoints();
       this.width = setup.enemyBossWidth;
       this.height = setup.enemyBossHeiht;
       this.character = new Sprite(setup.enemyBossImage, 1, 3, 120, 43, 3);

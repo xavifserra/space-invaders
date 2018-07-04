@@ -14,6 +14,7 @@ function Game(ctx, keysBuffer) {
   this._timeStamp = Date.now();
   this._timeStampMissile = Date.now();
   this._timeStampBoss = Date.now();
+  this._timestampSquad = Date.now();
 
   //player & enemies
   this.boss = undefined;
@@ -31,28 +32,10 @@ function Game(ctx, keysBuffer) {
   this.soundOfBoss = new Sound(sounds.boss);
   this.soundOfBlasterHit = new Sound(sounds.hit);
   this.soundBossExplode = new Sound(sounds.bossExplode);
+
+  this.background = new Image();
+  this.background.src = setup.imageOfBackground;
 }
-
-Game.prototype.reset = function () {
-
-  this.missileBuffer = [];
-  this.state = 'play'; //valid: 'play','pause','win','lost', 'stop' 
-
-  //control of FPS
-  this._timeStamp = Date.now();
-  this._timeStampMissile = Date.now();
-  this._timeStampBoss = Date.now();
-
-  //player & enemies
-  this.boss = undefined;
-  this.player.state = 'combat';
-  this.squad = new Squad(setup.enemiesInRow, setup.enemiesInColumn);
-
-  //lives
-  this.livesOfPlayer = setup.lives;
-
-  this.draw();
-};
 
 Game.prototype.manageBufferOfKeysPressed = function () {
 
@@ -78,9 +61,48 @@ Game.prototype.manageBufferOfKeysPressed = function () {
   }
 };
 
+Game.prototype.nextLevel = function () {
+
+  this.missileBuffer = [];
+  this.state = 'play'; //valid: 'play','pause','win','lost', 'stop'
+  this.level++;
+  
+  //control of FPS
+  this._timeStamp = Date.now();
+  this._timeStampMissile = Date.now();
+  this._timeStampBoss = Date.now();
+
+  //player & enemies
+  this.boss = undefined;
+  this.player.state = 'combat';
+  this.squad = new Squad(setup.enemiesInRow, setup.enemiesInColumn);
+};
+
+Game.prototype.reset = function () {
+
+  this.missileBuffer = [];
+  this.totalPoints = 0;
+  this.level = 1;
+  this.livesOfPlayer=setup.lives;
+  
+  //control of FPS
+  this._timeStamp = Date.now();
+  this._timeStampMissile = Date.now();
+  this._timeStampBoss = Date.now();
+  
+  //player & enemies
+  this.boss = undefined;
+  this.squad = new Squad(setup.enemiesInRow, setup.enemiesInColumn);
+  
+  this.state = 'play'; //valid: 'play','pause','win','lost', 'stop'
+  this.player.state = 'combat';
+  this.background=undefined;
+};
+
 Game.prototype.drawSky = function () {
   //TODO: make stars in the sky
   this.ctx.clearRect(0, 0, this.maxWidth, this.maxHeight);
+  this.ctx.drawImage(this.background,0,0,this.maxWidth,this.maxHeight);
   //this.ctx.fillStyle = setup.boardColor;
   //this.ctx.fillRect(0, 0, this.maxWidth, this.maxHeight);
 };
@@ -94,15 +116,13 @@ Game.prototype.drawPlayer = function () {
     this.player.x = this.maxWidth - this.player.width;
   }
   if (this.player.state != 'combat') {
-    this.player.x = this.player.xOld;//Don't move in pause or explosion
+    this.player.x = this.player.xOld; //Don't move in pause or explosion
   }
   this.player.draw(this.ctx);
-  //this.ctx.fillStyle = this.player.color;
-  //this.ctx.fillRect(this.player.x, this.player.y, this.player.width, this.player.height);
 };
 
 Game.prototype.playerFire = function () {
-  if (Date.now() - this._timeStampMissile > (1000 / setup.missileMax)) {
+  if (Date.now() - this._timeStampMissile > (1000 / setup.missileMax) ) {
     this._timeStampMissile = Date.now();
     this.missileBuffer.push(this.player.fire());
     this.soundOfShoot.play();
@@ -158,18 +178,24 @@ Game.prototype.drawBomb = function () {
 Game.prototype.drawSquad = function () {
 
   this.squad.enemiesCollection.forEach(function (row, indexRow) {
+
     row.forEach(function (enemy, indexEnemy) {
       if (enemy.state === 'destroy') {
         this.squad.enemiesCollection[indexRow].splice(indexEnemy, 1); //destroy enemy
       }
       enemy.draw(this.ctx);
-      // this.ctx.fillStyle = enemy.color;
-      // this.ctx.fillRect(enemy.x, enemy.y, enemy.width, enemy.height);
     }.bind(this));
+
+    if (row.length === 0) { //destoy row if is empty
+      this.squad.enemiesCollection.splice(indexRow, 1);
+    }
   }.bind(this));
 
   this.squad.move();
-  this.squad.atack();
+  if (Date.now() - this._timestampSquad > (3000 / setup.bombTimer) && !this.squad.isDestroyed()) {
+    this._timestampSquad = Date.now();
+    this.squad.atack();
+  }
 };
 
 Game.prototype.drawScore = function () {
@@ -181,7 +207,7 @@ Game.prototype.drawScore = function () {
   this.livesCounter.drawStrip(this.ctx, this.maxWidth / 10 * 9, this.maxHeight / 20 * 0.5,
     this.livesCounter.widthFrame / 2, this.livesCounter.heightFrame / 2,
     this.livesOfPlayer);
-  //TODO: lives graphic
+
   if (this.debug) {
     this.ctx.font = "9px Arial";
     this.ctx.fillStyle = 'white';
@@ -222,7 +248,7 @@ Game.prototype.checkCollisions = function () {
   this.missileBuffer.forEach(function (missile, indexMissile) {
     //Collision missile with bosses
     if (this._collision(missile, this.boss)) {
-      this.totalPoints += this.boss.points(); //increment points 
+      this.totalPoints += this.boss.points; //increment points 
       this.missileBuffer.splice(indexMissile, 1); //destroy missile     
       this.boss.state = 'hit';
       this.soundOfEnemyKilled.play();
@@ -241,7 +267,6 @@ Game.prototype.checkCollisions = function () {
       }.bind(this));
     }.bind(this));
   }.bind(this));
-
 };
 
 Game.prototype._collision = function (object1, object2) {
@@ -271,27 +296,27 @@ Game.prototype._collision = function (object1, object2) {
 Game.prototype.draw = function () {
 
   //this.idAnimation = requestAnimationFrame(this._update.bind(this)); //sustituye al setinterval y presenta 60frm/sec
+
   if (this.player.state === 'destroy' && this.livesOfPlayer > 0) {
     this.player.state = 'combat';
   }
 
   if (this.livesOfPlayer <= 0 && this.player.state === 'destroy') {
     this.state = 'lost';
-    console.log('GAME OVER');
+    // console.log('GAME OVER');
   }
 
-  if (this.squad.isDestroyed() && !this.boss && this.player.lives>0) { //destroyed squad and bosses
+  if (this.squad.isDestroyed() && !this.boss && this.livesOfPlayer > 0) { //destroyed squad and bosses
     this.state = 'win';
-    //TODO: update level
   }
 
   //random boss in max.30s
-  if (!this.boss && Date.now() - this._timeStampBoss > 30000 / setup.enemyBossTimer()) {
+  if (!this.boss && Date.now() - this._timeStampBoss > (30000 / setup.enemyBossTimer()) ) {
     this._timeStampBoss = Date.now();
     this.boss = new Enemy(this.maxWidth - 10, this.maxHeight / 8, 'boss'); //  Make the boss 
   }
 
-  if ((Date.now() - this._timeStamp) > (1000 / setup.fps)) {
+  if ((Date.now() - this._timeStamp) > (1000 / setup.fps)   / this.level) {
     this._timeStamp = Date.now();
 
     this.manageBufferOfKeysPressed();
