@@ -32,10 +32,15 @@ Sprite.prototype.selectStrip = function (strip) {
 
 Sprite.prototype.draw = function (ctx, x, y, width, height) {
   //if (this.currentFrame <= this.framesTotal) {
-    this.updateFrame();
-    ctx.clearRect(this.x, this.y, this.width, this.height);
-    ctx.drawImage(this.image, this.srcX, this.srcY, this.widthFrame, this.heightFrame, x, y, width, height);
-    //this.ctx.fillStyle = 'blue';
-    //this.ctx.fillRect(this.obj.x, this.obj.y, this.obj.width, this.obj.height);
+  this.updateFrame();
+  ctx.clearRect(this.x, this.y, this.width, this.height);
+  ctx.drawImage(this.image, this.srcX, this.srcY, this.widthFrame, this.heightFrame, x, y, width, height);
+  //this.ctx.fillStyle = 'blue';
+  //this.ctx.fillRect(this.obj.x, this.obj.y, this.obj.width, this.obj.height);
 };
 
+Sprite.prototype.drawStrip = function (ctx, x, y, width, height, strip) {
+  this.selectStrip(strip);
+  ctx.clearRect(this.x, this.y, this.width, this.height);
+  ctx.drawImage(this.image, this.srcX, this.srcY, this.widthFrame, this.heightFrame, x, y, width, height);
+};

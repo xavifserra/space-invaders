@@ -24,9 +24,14 @@ div.container {
   align-self: auto;
 }
 
-#game-zone {
-  align-self: auto;
+img.logo {
+  width: 15%;
+  height: 15%;
 }
+
+/* #game-zone {
+  align-self: auto;
+} */
 
 div.stars {
   width: 800px;

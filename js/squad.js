@@ -1,4 +1,4 @@
-function Squad(rowsOfEnemies, columnsOfEnemies) {
+function Squad() {
   this.enemiesCollection = [];
   this.bombBuffer = [];
   //this._enemiesCoordinates = [];
@@ -11,7 +11,7 @@ function Squad(rowsOfEnemies, columnsOfEnemies) {
   this._goToRight = true;
   this._goToLeft = false;
   //fill the squad
-  this._enroll(rowsOfEnemies, columnsOfEnemies);
+  this._enroll(setup.enemiesInRow, setup.enemiesInColumn);
   this._timeStampLastShot = Date.now();
   // this.bombCounter = 0;
   this.bombMax = setup.bombMax;
@@ -112,19 +112,11 @@ Squad.prototype.atack = function () {
     }.bind(this));
   }.bind(this));
 
-  //fire random in time 
-  if (Date.now() - this._timeStampLastShot > (3000 / setup.bombTimer)) {
-    this._timeStampLastShot = Date.now();
-    enemyShootRandom = enemiesCanShoot[Math.floor(Math.random() * (enemiesCanShoot.length - 1))];
-    //shootOk = enemyShootRandom.fire();
-    this.bombBuffer.push(enemyShootRandom.fire());
-    
-    // if (shootOk) {
-    //   this.bombBuffer.push(shootOk);
-    // }
-  }
+  enemyShootRandom = enemiesCanShoot[Math.floor(Math.random() * (enemiesCanShoot.length - 1))];
+  //shootOk = enemyShootRandom.fire();
+  this.bombBuffer.push(enemyShootRandom.fire());
 };
 
-Squad.prototype.isDestroyed=function(){
-  return this.enemiesCollection.length===0;
+Squad.prototype.isDestroyed = function () {
+  return this.enemiesCollection.length === 0;
 };
