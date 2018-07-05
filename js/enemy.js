@@ -63,7 +63,7 @@ Enemy.prototype._selectRole = function (role) {
       this.points = setup.enemyBossPoints();
       this.width = setup.enemyBossWidth;
       this.height = setup.enemyBossHeiht;
-      this.character = new Sprite(setup.enemyBossImage, 1, 3, 120, 43, 3);
+      this.character = new Sprite(setup.enemyBossImage, 1, 3,144,49,3);// 120, 43, 3);
       this.explosion = new Sprite(explosions.type2.image, explosions.type2.rows, explosions.type2.cols,explosions.type2.width, explosions.type2.height, explosions.type2.frames);
       break;
   }
@@ -90,7 +90,7 @@ Enemy.prototype.draw = function (ctx) {
       }
       break;
     case 'destroy':
-      ctx.fillStyle = 'black';
+      ctx.fillStyle = 'rgba(0,0,0,0)';//'black';
       ctx.fillRect(this.x, this.y, this.width, this.height);
       break;
   }

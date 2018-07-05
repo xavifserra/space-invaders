@@ -17,30 +17,34 @@
 </head>
 
 <body>
-  <div class=stars></div>
-  <div class="container-fluid" >
+  <!-- <div class=stars></div> -->
+  <div class="container-fluid">
     <div class="row">
-      <div class="col-md-12">
+      <dir class="col-md-12">
         <div class="text-center">
           <img class="logo" src="assets/img/si_logo_transp.png">
         </div>
-        <div class="row"  >
-          <div class="col-md-2">
-
-          </div>
-          <div class="col-md-8">
-            <div class="container">
-              <canvas id="game-zone"></canvas>
-            </div>
-            <div class="col-md-2">
-
-            </div>
-          </div>
-        </div>
-      </div>
     </div>
   </div>
-  <!-- <script src="assets/bootstrap-4.1.1-dist/js/bootstrap.min.js"></script> -->
+  </div>
+  </div>
+  <div class="row">
+    <div class="col-md-2">
+      <img class="cabinet-sides" src="assets/img/CabinetLeft.png">
+    </div>
+    <div class="col-md-8">
+      <canvas id="game-zone"></canvas>
+    </div>
+    <div class="col-md-2" id="cabinet">
+      <img class="cabinet-sides" src="assets/img/CabineRight.png">
+    </div>
+  </div>
+  </div>
+  <div class="col-md-12" id="cabinet">
+    <img class="cabinet-bottom" src="assets/img/CabinetDown.png">
+  </div>
+  </div>
+  </div>
 
   <script src="js/setup.js" charset="utf-8"></script>
   <script src="js/keyControl.js" charset="utf-8"></script>

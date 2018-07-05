@@ -21,9 +21,9 @@ window.onload = function () {
   game = new Game(ctx, keyControl.keysBuffer);
   introImage = new Image();
   introImage.src = "assets/img/IntroSI40anniversary_transp.png";
-  
+
   introMusic = new Sound("assets/sounds/duel of fates.mp3");
-  
+
   loop();
 };
 
@@ -33,7 +33,8 @@ function loop() {
   //console.log(this.game.state);
   switch (state) {
     case 'game':
-      $('img.logo').show();
+      cabinet(true);
+      logo(false);
       switch (this.game.state) {
         case 'play':
           game.draw();
@@ -51,13 +52,36 @@ function loop() {
       break;
     case 'intro':
       introMusic.play();
-      $('img.logo').hide();
+      cabinet(false);
+      logo(false);
       intro();
       break;
     case 'credits':
+      cabinet(false);
+      logo(true);
       $('img.logo').show();
       credits();
       break;
+  }
+}
+
+function logo(action) {
+  if (action) {
+    $('img.logo').show();
+  } else {
+    $('img.logo').hide();
+  }
+}
+
+function cabinet(action) {
+  if (action) {
+    $('img.cabinet-top').show();
+    $('img.cabinet-sides').show();
+    $('img.cabinet-bottom').show();
+  } else {
+    $('img.cabinet-top').hide();
+    $('img.cabinet-sides').hide();
+    $('img.cabinet-bottom').hide();
   }
 }
 

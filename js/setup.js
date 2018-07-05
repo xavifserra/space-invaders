@@ -40,7 +40,7 @@ var setup = {
   enemyBossColor: '#0000FF',
   enemyBossTimer: function () { return Math.random() * (1 - 0.5) + 0.5; }, //random min 15s max 30s in timer 30000
   enemyBossPoints: function () { return Math.floor(Math.random() * 250); },
-  enemyBossImage: 'assets/img/boss.png',
+  enemyBossImage: 'assets/img/bomb1.png',//'assets/img/boss.png',
   //SQUAD
   enemiesInRow: 5, //always 5
   enemiesInColumn: 12, //can select quantity of columns
