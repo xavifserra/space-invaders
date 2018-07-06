@@ -33,7 +33,7 @@ var setup = {
   //enemy Level1
   enemyL1Color: '#33CC33',
   enemyL1Points: 15,
-  enemyL1Image: 'assets/img/enemyrookie.png',
+  enemyL1Image: 'assets/img/enemyRookie.png',
   //BOSS
   enemyBossWidth: 63,
   enemyBossHeiht: 40,
