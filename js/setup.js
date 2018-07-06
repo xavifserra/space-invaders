@@ -5,7 +5,7 @@ var setup = {
   boardColor: 'black', //'#E3D4AB'
   fps: 20, //frames per second in game
   fpsSprite: 25,
-  offsetSprite: 5,
+  offSetSprite: 5,
   stateOfGame: 'intro',
   lives: 3,
   imageOfBackground: "assets/img/background.png",
