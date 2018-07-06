@@ -76,7 +76,7 @@ Squad.prototype.move = function () {
     this._xMinSquad = setup.limitHeight;
     this._moveSquadTo('right');
   }
-  if (this._yMaxSquad === setup.playerPosX()) {
+  if (this._yMaxSquad === setup.limitHeight-20){//} playerPosX()) {
     return true;
   }
 };

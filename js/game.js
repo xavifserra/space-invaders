@@ -9,12 +9,14 @@ function Game(ctx, keysBuffer) {
   this.missileBuffer = [];
   this.debug = true;
   this.state = 'pause'; //valid: 'play','pause', 'stop','win','lost' 
+  this._offSetSprite = setup.offSetSprite;
 
   //control of FPS
   this._timeStamp = Date.now();
   this._timeStampMissile = Date.now();
   this._timeStampBoss = Date.now();
   this._timestampSquad = Date.now();
+  this.enemyBossTimer = setup.enemyBossTimer();
 
   //player & enemies
   this.boss = undefined;
@@ -66,7 +68,7 @@ Game.prototype.nextLevel = function () {
   this.missileBuffer = [];
   this.state = 'play'; //valid: 'play','pause','win','lost', 'stop'
   this.level++;
-  
+
   //control of FPS
   this._timeStamp = Date.now();
   this._timeStampMissile = Date.now();
@@ -83,26 +85,26 @@ Game.prototype.reset = function () {
   this.missileBuffer = [];
   this.totalPoints = 0;
   this.level = 1;
-  this.livesOfPlayer=setup.lives;
-  
+  this.livesOfPlayer = setup.lives;
+
   //control of FPS
   this._timeStamp = Date.now();
   this._timeStampMissile = Date.now();
   this._timeStampBoss = Date.now();
-  
+
   //player & enemies
   this.boss = undefined;
   this.squad = new Squad(setup.enemiesInRow, setup.enemiesInColumn);
-  
+
   this.state = 'play'; //valid: 'play','pause','win','lost', 'stop'
   this.player.state = 'combat';
-  this.background=undefined;
+  this.background = undefined;
 };
 
 Game.prototype.drawSky = function () {
   //TODO: make stars in the sky
   this.ctx.clearRect(0, 0, this.maxWidth, this.maxHeight);
-  this.ctx.drawImage(this.background,0,0,this.maxWidth,this.maxHeight);
+  this.ctx.drawImage(this.background, 0, 0, this.maxWidth, this.maxHeight);
   //this.ctx.fillStyle = setup.boardColor;
   //this.ctx.fillRect(0, 0, this.maxWidth, this.maxHeight);
 };
@@ -122,7 +124,7 @@ Game.prototype.drawPlayer = function () {
 };
 
 Game.prototype.playerFire = function () {
-  if (Date.now() - this._timeStampMissile > (1000 / setup.missileMax) ) {
+  if (Date.now() - this._timeStampMissile > (1000 / setup.missileMax)) {
     this._timeStampMissile = Date.now();
     this.missileBuffer.push(this.player.fire());
     this.soundOfShoot.play();
@@ -275,14 +277,14 @@ Game.prototype._collision = function (object1, object2) {
     return false;
   }
 
-  this.x = object1.x + setup.offsetSprite;
-  this.y = object1.y + setup.offsetSprite;
-  this.w = object1.width - setup.offsetSprite;
-  this.h = object1.height - setup.offsetSprite;
-  this.x2 = object2.x + setup.offsetSprite;
-  this.y2 = object2.y + setup.offsetSprite;
-  this.w2 = object2.width - setup.offsetSprite;
-  this.h2 = object2.height - setup.offsetSprite;
+  this.x = object1.x + this._offSetSprite;
+  this.y = object1.y + this._offSetSprite;
+  this.w = object1.width - this._offSetSprite;
+  this.h = object1.height - this._offSetSprite;
+  this.x2 = object2.x + this._offSetSprite;
+  this.y2 = object2.y + this._offSetSprite;
+  this.w2 = object2.width - this._offSetSprite;
+  this.h2 = object2.height - this._offSetSprite;
   //control of areas with offset for best & fine control
   //x2 is in the width (x + w) of object1 and x1 is in the width (x2 + w2) of object2
   //y2 is in the height (y + h) of object1 and y1 is in the height (y2 + h2) of object2
@@ -311,12 +313,12 @@ Game.prototype.draw = function () {
   }
 
   //random boss in max.30s
-  if (!this.boss && Date.now() - this._timeStampBoss > (30000 / setup.enemyBossTimer()) ) {
+  if (!this.boss && Date.now() - this._timeStampBoss > (30000 / this.enemyBossTimer)) {
     this._timeStampBoss = Date.now();
     this.boss = new Enemy(this.maxWidth - 10, this.maxHeight / 8, 'boss'); //  Make the boss 
   }
 
-  if ((Date.now() - this._timeStamp) > (1000 / setup.fps)   / this.level) {
+  if ((Date.now() - this._timeStamp) > (1000 / setup.fps) / this.level) {
     this._timeStamp = Date.now();
 
     this.manageBufferOfKeysPressed();
