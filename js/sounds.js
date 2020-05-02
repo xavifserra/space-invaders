@@ -1,16 +1,16 @@
 function Sound(src) {
-  this.audio = undefined;
-  this.init(src);
+  this.audio = undefined
+  this.init(src)
 }
 
 Sound.prototype.init = function (src) {
-  this.audio = new Audio(src);
-};
+  this.audio = new Audio(src)
+}
 
 Sound.prototype.play = function () {
-  this.audio.play();
-};
+  this.audio.play()
+}
 
 Sound.prototype.stop = function () {
-  this.audio.pause();
-};
+  this.audio.pause()
+}
