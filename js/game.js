@@ -7,7 +7,7 @@ function Game(ctx, keysBuffer) {
   this.keysBuffer = keysBuffer
   this.missileBuffer = []
   this.debug = true
-  this.state = 'pause' // valid: 'play','pause', 'stop','win','lost'
+  this.state = 'stop' // valid: 'play','stop','win','lost'
   this._offSetSprite = setup.offSetSprite
 
   // control of FPS
@@ -40,7 +40,7 @@ function Game(ctx, keysBuffer) {
 
 Game.prototype.manageBufferOfKeysPressed = function () {
   if (this.keysBuffer.KeyP) { // key P => Pause.
-    this.state = 'pause'
+    this.state = 'stop'
   }
   if (this.keysBuffer.Space) { // space => fire
     this.playerFire()
@@ -63,7 +63,7 @@ Game.prototype.manageBufferOfKeysPressed = function () {
 
 Game.prototype.nextLevel = function () {
   this.missileBuffer = []
-  this.state = 'play' // valid: 'play','pause','win','lost', 'stop'
+  this.state = 'play' // valid: 'play','win','lost', 'stop'
   this.level++
 
   // control of FPS
@@ -92,9 +92,8 @@ Game.prototype.reset = function () {
   this.boss = undefined
   this.squad = new Squad(setup.enemiesInRow, setup.enemiesInColumn)
 
-  this.state = 'play' // valid: 'play','pause','win','lost', 'stop'
+  this.state = 'stop' // valid: 'play','win','lost', 'stop'
   this.player.state = 'combat'
-  this.background = undefined
 }
 
 Game.prototype.drawSky = function () {
@@ -185,7 +184,7 @@ Game.prototype.drawSquad = function () {
   })
 
   this.squad.move()
-  if (Date.now() - this._timestampSquad > (3000 / setup.bombTimer) && !this.squad.isDestroyed()) {
+  if (Date.now() - this._timestampSquad > (3000 / setup.bombTimer) && !this.squad._isDestroyed()) {
     this._timestampSquad = Date.now()
     this.squad.atack()
   }
@@ -293,7 +292,7 @@ Game.prototype.draw = function () {
     // console.log('GAME OVER');
   }
 
-  if (this.squad.isDestroyed() && !this.boss && this.livesOfPlayer > 0) { // destroyed squad and bosses
+  if (this.squad._isDestroyed() && !this.boss && this.livesOfPlayer > 0) { // destroyed squad and bosses
     this.state = 'win'
   }
 

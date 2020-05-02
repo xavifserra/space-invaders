@@ -1,7 +1,7 @@
-function Stars(){
+function Stars() {
 
 }
 
-Stars.prototype.init=function(){
+Stars.prototype.init = function () {
 
-};
+}

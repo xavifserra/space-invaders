@@ -11,10 +11,10 @@ function Squad(enemiesInRow, enemiesInColumn) {
   this._goToRight = true
   this._goToLeft = false
   // fill the squad
-  this._enroll(enemiesInRow, enemiesInColumn)
   this._timeStampLastShot = Date.now()
   // this.bombCounter = 0;
   this.bombMax = setup.bombMax
+  this._enroll(enemiesInRow, enemiesInColumn)
 }
 
 Squad.prototype._enroll = function (rowsOfEnemies, columnsOfEnemies) {
@@ -36,6 +36,47 @@ Squad.prototype._enroll = function (rowsOfEnemies, columnsOfEnemies) {
       this.enemiesCollection[n1Row][n1Col] = new Enemy(this.xSquad + n1Col * setup.enemySpace, this.ySquad + n1Row * setup.enemySpace, 'rookie')
     }
   }
+}
+
+Squad.prototype._moveSquadTo = function (direction) {
+  this.enemiesCollection.forEach((row) => {
+    row.forEach((enemy) => {
+      switch (direction) {
+        case 'right':
+          enemy.goRight()
+          break
+        case 'left':
+          enemy.goLeft()
+          break
+        case 'down':
+          enemy.goDown()
+          break
+        default:
+          break
+      }
+    })
+  })
+}
+
+Squad.prototype._isDestroyed = function () {
+  return this.enemiesCollection.length === 0
+}
+
+Squad.prototype.atack = function () {
+  // var shootOK;
+  const enemiesCanShoot = []
+  let shootRandomInEnemiesCanShoot = null
+
+  // search enemies who can shoot
+  this.enemiesCollection.forEach((row) => {
+    row.forEach((enemy) => {
+      enemiesCanShoot.push(enemy)
+    })
+  })
+  // order fire to random enemy can shot
+  shootRandomInEnemiesCanShoot = enemiesCanShoot[Math.floor(Math.random() * (enemiesCanShoot.length - 1))]
+  // shootOk = enemyShootRandom.fire();
+  this.bombBuffer.push(shootRandomInEnemiesCanShoot.fire())
 }
 
 Squad.prototype.move = function () {
@@ -78,45 +119,5 @@ Squad.prototype.move = function () {
   if (this._yMaxSquad === setup.limitHeight - 20) { // } playerPosX()) {
     return true
   }
-}
-
-Squad.prototype._moveSquadTo = function (direction) {
-  this.enemiesCollection.forEach((row) => {
-    row.forEach((enemy) => {
-      switch (direction) {
-        case 'right':
-          enemy.goRight()
-          break
-        case 'left':
-          enemy.goLeft()
-          break
-        case 'down':
-          enemy.goDown()
-          break
-        default:
-          break
-      }
-    })
-  })
-}
-
-Squad.prototype.atack = function () {
-  // var shootOK;
-  const enemiesCanShoot = []
-  let enemyShootRandom
-
-  // search enemies who can shoot
-  this.enemiesCollection.forEach((row) => {
-    row.forEach((enemy) => {
-      enemiesCanShoot.push(enemy)
-    })
-  })
-
-  enemyShootRandom = enemiesCanShoot[Math.floor(Math.random() * (enemiesCanShoot.length - 1))]
-  // shootOk = enemyShootRandom.fire();
-  this.bombBuffer.push(enemyShootRandom.fire())
-}
-
-Squad.prototype.isDestroyed = function () {
-  return this.enemiesCollection.length === 0
+  return false   // TODO: observe comportament
 }

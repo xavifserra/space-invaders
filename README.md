@@ -1,2 +1,6 @@
 # spaceinvaders
-This is a game like the retro "space invaders", in canvas for the 1rst project in IRONHACK course
+This is a tribute in the 25th anniversary of the retro game "space invaders". It's coded in HTML canvas and Javascript for the 1rst project in IRONHACK´s course.
+
+# Happy Game!!!!
+
+play https://xavifserra.github.io/space-invaders/
