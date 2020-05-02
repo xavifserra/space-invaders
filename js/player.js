@@ -45,5 +45,7 @@ Player.prototype.draw = function (ctx) {
       ctx.fillStyle = 'black'
       ctx.fillRect(this.x, this.y, this.width, this.height)
       break
+    default:
+      break
   }
 }

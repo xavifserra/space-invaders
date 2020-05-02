@@ -93,6 +93,8 @@ Squad.prototype._moveSquadTo = function (direction) {
         case 'down':
           enemy.goDown()
           break
+        default:
+          break
       }
     })
   })
