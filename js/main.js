@@ -11,17 +11,17 @@ const introMusic = new Sound(setup.gameIntroMusic)
 const keyControl = new KeyControl()
 
 window.onload = function () {
-  sky = document.getElementById("game-zone");
-  sky.width = setup.limitWidth;
-  sky.height = setup.limitHeight;
-  ctx = sky.getContext("2d");
-  introImage.src =setup.gameIntroImage
+  sky = document.getElementById('game-zone')
+  sky.width = setup.limitWidth
+  sky.height = setup.limitHeight
+  ctx = sky.getContext('2d')
+  introImage.src = setup.gameIntroImage
 
-  keyControl.init();
-  game = new Game(ctx, keyControl.keysBuffer);
-  console.log(introMusic);
+  keyControl.init()
+  game = new Game(ctx, keyControl.keysBuffer)
+  console.log(introMusic)
   introMusic.play()
-  loop();
+  loop()
 }
 
 const loop = () => {
@@ -151,7 +151,7 @@ function credits() {
 
   ctx.fillText('BEST PLAYERS', sky.width / 6 + 30, sky.height / 6 + 30)
 
-  fillRanking()
+  fillInitialRanking()
 
   for (let index = 0; index < localStorage.length / 2; index++) {
     element1 = localStorage.getItem(`name${index}`)
@@ -208,7 +208,7 @@ function centerText(text) {
   ctx.fillText(text, sky.width / 2 - text.length / 2 * 50, sky.height / 2 - 20)
 }
 
-function fillRanking() {
+function fillInitialRanking() {
   if (localStorage.length === 0 || (localStorage.length > 0 && localStorage.getItem('name0') === null)) {
     // if not ranking, fill it
     localStorage.clear()

@@ -2,42 +2,43 @@ const setup = {
   // GAME
   limitWidth: 800, // window.innerWidth,
   limitHeight: 600, // window.innerHeight,
-  boardColor: "black", // '#E3D4AB'
+  boardColor: 'black', // '#E3D4AB'
   fps: 20, // frames per second in game
   fpsSprite: 25,
   offSetSprite: 5,
-  stateOfGame: "intro",
+  stateOfGame: 'intro',
   lives: 3,
-  gameImageOfBackground: "assets/img/background.png",
+  gameImageOfBackground: 'assets/img/background.png',
   gameIntroImage:'assets/img/IntroSI40anniversary_transp.png',
   gameIntroMusic: 'assets/sounds/duel of fates.mp3',
-    // SQUAD
+  // SQUAD
   enemiesInRow: 5, // always 5
   enemiesInColumn: 12, // can select quantity of columns
+  timerPresentBoss() { return Math.random() * (1 - 0.5) + 0.5 }, // random min 15s max 30s in timer 30000
 }
 
-//Weapons
+// Weapons
 const weapons = {
   // Projectiles
   projectil: {
-    missileColor: "green",
+    missileColor: 'green',
     missileWidth: 24,
     misileHeiht: 48,
     missileMax: 2, // ratio missile equal to 3fps
     missileVelocity: 10,
-    missileImage: "assets/img/bullets.png",
+    missileImage: 'assets/img/bullets.png',
   },
   bomb: {
   // bomb
-    bombColor: "yellow",
+    bombColor: 'yellow',
     bombWidth: 20,
     bombHeiht: 20,
     bombMax: 6,
     bombTimer: 6,
     bombVelocity: 3,
     bombPoints: 5,
-    bombImage: "assets/img/bomb.png",
-  }
+    bombImage: 'assets/img/bomb.png',
+  },
 }
 
 // SOUNDS
@@ -103,10 +104,9 @@ const enemies = {
     // BOSS
     enemyBossWidth: 63,
     enemyBossHeiht: 40,
-    enemyBossColor: "#0000FF",
-    enemyBossTimer() { return Math.random() * (1 - 0.5) + 0.5; }, // random min 15s max 30s in timer 30000
-    enemyBossPoints() { return Math.floor(Math.random() * 250); },
-    enemyBossImage: "assets/img/bomb1.png", // 'assets/img/boss.png',
+    enemyBossColor: '#0000FF',
+    enemyBossPoints() { return Math.floor(Math.random() * 250) },
+    enemyBossImage: 'assets/img/bomb1.png', // 'assets/img/boss.png',
   },
   official :{},
   veteran :{},
