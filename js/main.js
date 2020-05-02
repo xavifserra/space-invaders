@@ -1,27 +1,27 @@
 let idAnimation
 let game
 let gamepad
+let sky
 let ctx
 let blink = false
 let timeStamp = Date.now()
 let state = 'intro' // valid 'intro', 'credits', 'game'
-let sky
 const introImage = new Image()
-const introMusic = new Sound('assets/sounds/duel of fates.mp3')
+const introMusic = new Sound(setup.gameIntroMusic)
 const keyControl = new KeyControl()
 
 window.onload = function () {
-  sky = document.getElementById('game-zone')
-  sky.width = setup.limitWidth
-  sky.height = setup.limitHeight
-  ctx = sky.getContext('2d')
-  introImage.src = 'assets/img/IntroSI40anniversary_transp.png'
+  sky = document.getElementById("game-zone");
+  sky.width = setup.limitWidth;
+  sky.height = setup.limitHeight;
+  ctx = sky.getContext("2d");
+  introImage.src =setup.gameIntroImage
 
-  keyControl.init()
-
-  game = new Game(ctx, keyControl.keysBuffer)
-
-  loop()
+  keyControl.init();
+  game = new Game(ctx, keyControl.keysBuffer);
+  console.log(introMusic);
+  introMusic.play()
+  loop();
 }
 
 const loop = () => {
@@ -53,7 +53,7 @@ const loop = () => {
       drawCabinet(false)
       logo(false)
       intro()
-      // introMusic.play()
+      // introMusic.autoplay().loop()
       break
     case 'credits':
       drawCabinet(false)

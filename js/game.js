@@ -15,7 +15,7 @@ function Game(ctx, keysBuffer) {
   this._timeStampMissile = Date.now()
   this._timeStampBoss = Date.now()
   this._timestampSquad = Date.now()
-  this.enemyBossTimer = setup.enemyBossTimer()
+  this.enemyBossTimer = enemies.boss.enemyBossTimer()
 
   // player & enemies
   this.boss = undefined
@@ -35,7 +35,7 @@ function Game(ctx, keysBuffer) {
   this.soundBossExplode = new Sound(sounds.bossExplode)
 
   this.background = new Image()
-  this.background.src = setup.imageOfBackground
+  this.background.src = setup.gameImageOfBackground
 }
 
 Game.prototype.manageBufferOfKeysPressed = function () {
@@ -195,7 +195,7 @@ Game.prototype.drawScore = function () {
   this.ctx.fillStyle = 'green'
   this.ctx.fillText(`points: ${this.totalPoints}`, this.maxWidth / 10, this.maxHeight / 20)
   this.ctx.fillText(`level: ${this.level}`, this.maxWidth / 2, this.maxHeight / 20 * 2)
-  this.ctx.fillText(`live: ${this.livesOfPlayer}`, this.maxWidth / 10 * 8, this.maxHeight / 20)
+  this.ctx.fillText(`lives: ${this.livesOfPlayer}`, this.maxWidth / 10 * 8, this.maxHeight / 20)
   this.livesCounter.drawStrip(this.ctx, this.maxWidth / 10 * 9, this.maxHeight / 20 * 0.5,
     this.livesCounter.widthFrame / 2, this.livesCounter.heightFrame / 2,
     this.livesOfPlayer)

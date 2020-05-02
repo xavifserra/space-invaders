@@ -1,9 +1,4 @@
 function Sound(src) {
-  this.audio = undefined
-  this.init(src)
-}
-
-Sound.prototype.init = function (src) {
   this.audio = new Audio(src)
 }
 
