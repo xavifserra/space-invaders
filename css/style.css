@@ -35,5 +35,9 @@ img.cabinet-bottom {
 }
 
 div.stars {
-  width: 800px;
+  width: 100%; /*800px;*/
+}
+#game-zone {
+  width: 100%; /*800px;*/
+  float: center;
 }

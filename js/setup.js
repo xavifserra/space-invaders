@@ -10,12 +10,15 @@ const setup = {
   lives: 3,
   gameImageOfBackground: 'assets/img/background.png',
   gameIntroImage: 'assets/img/IntroSI40anniversary_transp.png',
-  gameIntroMusic: 'assets/sounds/duel of fates.mp3',
-  missileMax: 2, // ratio missile equal to 3fps
-  enemiesVelocity: 3,
+  gameIntroMusic: 'assets/sounds/dueloffates.mp3',
+  missileTimer: 2, // ratio missile equal to 3fps
+  bombTimer: 6,
+  enemiesSpeed: 3,
   enemiesInRow: 5, // always 5
   enemiesInColumn: 12, // can select quantity of columns
   spaceBetweenEnemies: 40,
+  enemiesSquadWidth: 25,
+  enemiesSquadHeight: 25,
   // Timer Boss Appearance
   timerBetweenBossAppearance() {
     return Math.random() * (1 - 0.5) + 0.5
@@ -37,8 +40,6 @@ const weapons = {
     width: 20,
     height: 20,
     color: 'yellow',
-    ratio: 6,
-    timer: 6,
     velocity: 3,
     points: 5,
     image: 'assets/img/bomb.png',
@@ -92,19 +93,19 @@ const liveScore = {
   height: 144,
   image: 'assets/img/lives-120x144x4.png',
 }
-const squad = {
-  // SQUAD
-  enemiesWidth: 25,
-  enemiesHeight: 25,
-}
+
 // actors
 player1 = {
   // player
-  playerColor: 'red',
-  playerWidth: 40,
-  playerHeiht: 40,
-  playerPosX() { return setup.limitWidth / 2 },
-  playerPosY() { return setup.limitHeight - 50 },
+  color: 'red',
+  width: 40,
+  height: 40,
+  playerPosX() {
+    return setup.limitWidth / 2
+  },
+  playerPosY() {
+    return setup.limitHeight - 50
+  },
   playerImage: 'assets/img/ship.png',
 }
 

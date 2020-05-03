@@ -2,9 +2,9 @@ function Player(playerObject) {
   this.x = playerObject.playerPosX()
   this.y = playerObject.playerPosY()
   this.xOld = this.x
-  this.width = playerObject.playerWidth
-  this.height = playerObject.playerHeiht
-  this.color = playerObject.playerColor
+  this.width = playerObject.width
+  this.height = playerObject.height
+  this.color = playerObject.color
   this.character = new Sprite(playerObject.playerImage, 3, 3, 120, 129, 3)
   this.explosion = new Sprite(
     explosions.type1.image,
