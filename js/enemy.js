@@ -4,8 +4,8 @@ function Enemy(xPos, yPos, role) {
   this.points = undefined
   this.x = xPos
   this.y = yPos
-  this.width = setup.enemySquadWidth
-  this.height = setup.enemySquadHeiht
+  this.width = 0
+  this.height = 0
   this.enemiesVelocity = setup.enemiesVelocity
   this._selectRole(role)
   this.state = 'combat'

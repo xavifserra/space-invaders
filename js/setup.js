@@ -16,8 +16,6 @@ const setup = {
   enemiesInColumn: 12, // can select quantity of columns
   enemiesVelocity: 3,
   spaceBetweenEnemies: 40,
-  enemySquadWidth: 25,
-  enemySquadHeight: 25,
   // Timer Boss Appearance
   timerBetweenBossAppearance() { return Math.random() * (1 - 0.5) + 0.5 }, // random min 15s max 30s in timer 30000
 }
@@ -118,24 +116,24 @@ const enemies = {
   },
   official: {
     // enemy Level3
-    width: setup.enemySquadWidth,
-    height: setup.enemySquadHeight,
+    width: 25,
+    height: 25,
     color: '#3366CC',
     points: 50,
     image: 'assets/img/enemyOfficial.png',
   },
   veteran: {
     // enemy Level2
-    width: setup.enemySquadWidth,
-    height: setup.enemySquadHeight,
+    width: 25,
+    height: 25,
     color: '#FF00FF',
     points: 25,
     image: 'assets/img/enemyVeteran.png',
   },
   rookie: {
     // enemy Level1
-    width: setup.enemySquadWidth,
-    height: setup.enemySquadHeight,
+    width: 25,
+    height: 25,
     color: '#33CC33',
     points: 15,
     image: 'assets/img/enemyRookie.png',

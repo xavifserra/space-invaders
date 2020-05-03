@@ -1,4 +1,4 @@
-function Squad(enemiesInRow, enemiesInColumn) {
+function Squad(enemiesInRow, enemiesInColumn, spaceBetweenEnemies) {
   this.enemiesCollection = []
   this.bombBuffer = []
   // this._enemiesCoordinates = [];
@@ -13,7 +13,7 @@ function Squad(enemiesInRow, enemiesInColumn) {
   // fill the squad
   this._timeStampLastShot = Date.now()
   // this.bombCounter = 0;
-  this.bombMax = weapons.bomb.ratio//.bombMax
+  this.bombMax = weapons.bomb.ratio //.bombMax
   this._enroll(enemiesInRow, enemiesInColumn)
 }
 
@@ -26,7 +26,7 @@ Squad.prototype._enroll = function (rowsOfEnemies, columnsOfEnemies) {
   for (let n3Col = 0; n3Col < columnsOfEnemies; n3Col++) {
     // Level 3
     this.enemiesCollection[0][n3Col] = new Enemy(
-      this.xSquad + n3Col * setup.spaceBetweenEnemies,
+      this.xSquad + n3Col * spaceBetweenEnemies,
       this.ySquad,
       'official',
     )
@@ -35,8 +35,8 @@ Squad.prototype._enroll = function (rowsOfEnemies, columnsOfEnemies) {
     for (let n2Col = 0; n2Col < columnsOfEnemies; n2Col++) {
       // Level 2
       this.enemiesCollection[n2Row][n2Col] = new Enemy(
-        this.xSquad + n2Col * setup.spaceBetweenEnemies,
-        this.ySquad + n2Row * setup.spaceBetweenEnemies,
+        this.xSquad + n2Col * spaceBetweenEnemies,
+        this.ySquad + n2Row * spaceBetweenEnemies,
         'veteran',
       )
     }
@@ -45,8 +45,8 @@ Squad.prototype._enroll = function (rowsOfEnemies, columnsOfEnemies) {
     for (let n1Col = 0; n1Col < columnsOfEnemies; n1Col++) {
       // Level 1
       this.enemiesCollection[n1Row][n1Col] = new Enemy(
-        this.xSquad + n1Col * setup.spaceBetweenEnemies,
-        this.ySquad + n1Row * setup.spaceBetweenEnemies,
+        this.xSquad + n1Col * spaceBetweenEnemies,
+        this.ySquad + n1Row * spaceBetweenEnemies,
         'rookie',
       )
     }

@@ -9,7 +9,7 @@ function Projectile(options) {
 
   switch (this.type) {
     case 'missile':
-      this.color = weapons.missile.color;
+      this.color = weapons.missile.color
       this.width = weapons.missile.width
       this.height = weapons.missile.height
       this.sprite = new Sprite(weapons.missile.image, 1, 4, 97, 25, 4)

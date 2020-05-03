@@ -20,7 +20,7 @@ function Game(ctx, keysBuffer) {
   // player & enemies
   this.boss = undefined
   this.player = new Player(player1)
-  this.squad = new Squad(setup.enemiesInRow, setup.enemiesInColumn)
+  this.squad = new Squad(setup.enemiesInRow, setup.enemiesInColumn, setup.spaceBetweenEnemies)
 
   // lives
   this.livesOfPlayer = setup.lives
