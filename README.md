@@ -3,4 +3,3 @@ This is a tribute in the 45th anniversary of the retro game "space invaders". It
 
 # Happy Game!!!!
 
-play https://xavifserra.github.io/space-invaders/
