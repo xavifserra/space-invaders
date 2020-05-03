@@ -11,13 +11,14 @@ const setup = {
   gameImageOfBackground: 'assets/img/background.png',
   gameIntroImage: 'assets/img/IntroSI40anniversary_transp.png',
   gameIntroMusic: 'assets/sounds/duel of fates.mp3',
-  // SQUAD
+  enemiesVelocity: 3,
   enemiesInRow: 5, // always 5
   enemiesInColumn: 12, // can select quantity of columns
-  enemiesVelocity: 3,
   spaceBetweenEnemies: 40,
   // Timer Boss Appearance
-  timerBetweenBossAppearance() { return Math.random() * (1 - 0.5) + 0.5 }, // random min 15s max 30s in timer 30000
+  timerBetweenBossAppearance() {
+    return Math.random() * (1 - 0.5) + 0.5
+  }, // random min 15s max 30s in timer 30000
 }
 
 // Weapons
@@ -91,7 +92,11 @@ const liveScore = {
   height: 144,
   image: 'assets/img/lives-120x144x4.png',
 }
-
+const squad = {
+  // SQUAD
+  enemiesWidth: 25,
+  enemiesHeight: 25,
+}
 // actors
 player1 = {
   // player

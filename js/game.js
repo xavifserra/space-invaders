@@ -20,11 +20,24 @@ function Game(ctx, keysBuffer) {
   // player & enemies
   this.boss = undefined
   this.player = new Player(player1)
-  this.squad = new Squad(setup.enemiesInRow, setup.enemiesInColumn, setup.spaceBetweenEnemies)
+  this.squad = new Squad(
+    setup.enemiesInRow,
+    setup.enemiesInColumn,
+    setup.spaceBetweenEnemies,
+    this.maxWidth,
+    this.maxHeight,
+  )
 
   // lives
   this.livesOfPlayer = setup.lives
-  this.livesCounter = new Sprite(liveScore.image, liveScore.rows, liveScore.cols, liveScore.width, liveScore.height, liveScore.frames)
+  this.livesCounter = new Sprite(
+    liveScore.image,
+    liveScore.rows,
+    liveScore.cols,
+    liveScore.width,
+    liveScore.height,
+    liveScore.frames
+  )
 
   // sounds
   this.soundOfShoot = new Sound(sounds.shoot)
@@ -39,23 +52,29 @@ function Game(ctx, keysBuffer) {
 }
 
 Game.prototype.manageBufferOfKeysPressed = function () {
-  if (this.keysBuffer.KeyP) { // key P => Pause.
+  if (this.keysBuffer.KeyP) {
+    // key P => Pause.
     this.state = 'stop'
   }
-  if (this.keysBuffer.Space) { // space => fire
+  if (this.keysBuffer.Space) {
+    // space => fire
     this.playerFire()
   }
-  if (this.keysBuffer.ArrowLeft) { // arrow left
+  if (this.keysBuffer.ArrowLeft) {
+    // arrow left
     this.player.goLeft()
   }
-  if (this.keysBuffer.ArrowRight) { // arrow right
+  if (this.keysBuffer.ArrowRight) {
+    // arrow right
     this.player.goRight()
   }
-  if (this.keysBuffer.Space && this.keysBuffer.ArrowLeft) { // left+fire
+  if (this.keysBuffer.Space && this.keysBuffer.ArrowLeft) {
+    // left+fire
     this.playerFire()
     this.player.goLeft()
   }
-  if (this.keysBuffer.Space && this.keysBuffer.ArrowRight) { // right+fire
+  if (this.keysBuffer.Space && this.keysBuffer.ArrowRight) {
+    // right+fire
     this.playerFire()
     this.player.goRight()
   }
@@ -118,7 +137,7 @@ Game.prototype.drawPlayer = function () {
 }
 
 Game.prototype.playerFire = function () {
-  if (Date.now() - this._timeStampMissile > (1000 / setup.missileMax)) {
+  if (Date.now() - this._timeStampMissile > 1000 / setup.missileMax) {
     this._timeStampMissile = Date.now()
     this.missileBuffer.push(this.player.fire())
     this.soundOfShoot.play()
@@ -132,7 +151,8 @@ Game.prototype.drawBoss = function () {
     // this.ctx.fillStyle = this.boss.color;
     // this.ctx.fillRect(this.boss.x, this.boss.y, this.boss.width, this.boss.height);
     this.soundOfBoss.play()
-    if (this.boss.x < 0 || this.boss.state === 'destroy') { // out of area
+    if (this.boss.x < 0 || this.boss.state === 'destroy') {
+      // out of area
       this.boss = undefined
     }
   }
@@ -178,13 +198,14 @@ Game.prototype.drawSquad = function () {
       enemy.draw(this.ctx)
     })
 
-    if (row.length === 0) { // destoy row if is empty
+    if (row.length === 0) {
+      // destoy row if is empty
       this.squad.enemiesCollection.splice(indexRow, 1)
     }
   })
 
   this.squad.move()
-  if (Date.now() - this._timestampSquad > (3000 / setup.bombTimer) && !this.squad.isDestroyed()) {
+  if (Date.now() - this._timestampSquad > 3000 / setup.bombTimer && !this.squad.isDestroyed()) {
     this._timestampSquad = Date.now()
     this.squad.atack()
   }
@@ -194,16 +215,25 @@ Game.prototype.drawScore = function () {
   this.ctx.font = 'bold 20px Phosphate'
   this.ctx.fillStyle = 'green'
   this.ctx.fillText(`points: ${this.totalPoints}`, this.maxWidth / 10, this.maxHeight / 20)
-  this.ctx.fillText(`level: ${this.level}`, this.maxWidth / 2, this.maxHeight / 20 * 2)
-  this.ctx.fillText(`lives: ${this.livesOfPlayer}`, this.maxWidth / 10 * 8, this.maxHeight / 20)
-  this.livesCounter.drawStrip(this.ctx, this.maxWidth / 10 * 9, this.maxHeight / 20 * 0.5,
-    this.livesCounter.widthFrame / 2, this.livesCounter.heightFrame / 2,
-    this.livesOfPlayer)
+  this.ctx.fillText(`level: ${this.level}`, this.maxWidth / 2, (this.maxHeight / 20) * 2)
+  this.ctx.fillText(`lives: ${this.livesOfPlayer}`, (this.maxWidth / 10) * 8, this.maxHeight / 20)
+  this.livesCounter.drawStrip(
+    this.ctx,
+    (this.maxWidth / 10) * 9,
+    (this.maxHeight / 20) * 0.5,
+    this.livesCounter.widthFrame / 2,
+    this.livesCounter.heightFrame / 2,
+    this.livesOfPlayer
+  )
 
   if (this.debug) {
     this.ctx.font = '9px Arial'
     this.ctx.fillStyle = 'white'
-    this.ctx.fillText(`xMin: ${this.squad._xMinSquad} xMax: ${this.squad._xMaxSquad} yMax: ${this.squad._yMaxSquad} bombs: ${this.squad.bombBuffer.length}`, this.maxWidth / 10 * 7, this.maxHeight / 20 * 19)
+    this.ctx.fillText(
+      `xMin: ${this.squad._xMinSquad} xMax: ${this.squad._xMaxSquad} yMax: ${this.squad._yMaxSquad} bombs: ${this.squad.bombBuffer.length}`,
+      (this.maxWidth / 10) * 7,
+      (this.maxHeight / 20) * 19
+    )
   }
 }
 
@@ -276,8 +306,12 @@ Game.prototype._collision = function (object1, object2) {
   // control of areas with offset for best & fine control
   // x2 is in the width (x + w) of object1 and x1 is in the width (x2 + w2) of object2
   // y2 is in the height (y + h) of object1 and y1 is in the height (y2 + h2) of object2
-  return this.x + this.w >= this.x2 && this.x <= this.x2 + this.w2
-    && this.y + this.h >= this.y2 && this.y <= this.y2 + this.h2
+  return (
+    this.x + this.w >= this.x2 &&
+    this.x <= this.x2 + this.w2 &&
+    this.y + this.h >= this.y2 &&
+    this.y <= this.y2 + this.h2
+  )
 }
 
 Game.prototype.draw = function () {
@@ -292,17 +326,18 @@ Game.prototype.draw = function () {
     // console.log('GAME OVER');
   }
 
-  if (this.squad.isDestroyed() && !this.boss && this.livesOfPlayer > 0) { // destroyed squad and bosses
+  if (this.squad.isDestroyed() && !this.boss && this.livesOfPlayer > 0) {
+    // destroyed squad and bosses
     this.state = 'win'
   }
 
   // random boss in max.30s
-  if (!this.boss && Date.now() - this._timeStampBoss > (30000 / this.enemyBossTimer)) {
+  if (!this.boss && Date.now() - this._timeStampBoss > 30000 / this.enemyBossTimer) {
     this._timeStampBoss = Date.now()
     this.boss = new Enemy(this.maxWidth - 10, this.maxHeight / 8, 'boss') //  Make the boss
   }
 
-  if ((Date.now() - this._timeStamp) > (1000 / setup.fps) / this.level) {
+  if (Date.now() - this._timeStamp > 1000 / setup.fps / this.level) {
     this._timeStamp = Date.now()
 
     this.manageBufferOfKeysPressed()

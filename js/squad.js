@@ -1,10 +1,12 @@
-function Squad(enemiesInRow, enemiesInColumn, spaceBetweenEnemies) {
+function Squad(enemiesInRow, enemiesInColumn, spaceBetweenEnemies, limitWidth, limitHeight) {
   this.enemiesCollection = []
   this.bombBuffer = []
+  this.limitWidth=limitWidth
+  this.limitHeight=limitHeight
   // this._enemiesCoordinates = [];
-  this.xSquad = Math.floor(setup.limitWidth / 6)
-  this.ySquad = Math.floor(setup.limitHeight / 5)
-  this._xMinSquad = setup.limitWidth
+  this.xSquad = Math.floor(this.limitWidth / 6)
+  this.ySquad = Math.floor(this.limitHeight / 5)
+  this._xMinSquad = this.limitWidth
   this._xMaxSquad = 0
   this._yMaxSquad = 0
   // this._fillCoordinates();
@@ -15,6 +17,9 @@ function Squad(enemiesInRow, enemiesInColumn, spaceBetweenEnemies) {
   // this.bombCounter = 0;
   this.bombMax = weapons.bomb.ratio //.bombMax
   this._enroll(enemiesInRow, enemiesInColumn)
+  this.spaceBetweenEnemies = spaceBetweenEnemies
+  this.enemySquadWidth = squad.enemiesWidth
+  this.enemiesHeight = squad.enemiesHeight
 }
 
 Squad.prototype._enroll = function (rowsOfEnemies, columnsOfEnemies) {
@@ -26,7 +31,7 @@ Squad.prototype._enroll = function (rowsOfEnemies, columnsOfEnemies) {
   for (let n3Col = 0; n3Col < columnsOfEnemies; n3Col++) {
     // Level 3
     this.enemiesCollection[0][n3Col] = new Enemy(
-      this.xSquad + n3Col * spaceBetweenEnemies,
+      this.xSquad + n3Col * this.spaceBetweenEnemies,
       this.ySquad,
       'official',
     )
@@ -35,8 +40,8 @@ Squad.prototype._enroll = function (rowsOfEnemies, columnsOfEnemies) {
     for (let n2Col = 0; n2Col < columnsOfEnemies; n2Col++) {
       // Level 2
       this.enemiesCollection[n2Row][n2Col] = new Enemy(
-        this.xSquad + n2Col * spaceBetweenEnemies,
-        this.ySquad + n2Row * spaceBetweenEnemies,
+        this.xSquad + n2Col * this.spaceBetweenEnemies,
+        this.ySquad + n2Row * this.spaceBetweenEnemies,
         'veteran',
       )
     }
@@ -45,8 +50,8 @@ Squad.prototype._enroll = function (rowsOfEnemies, columnsOfEnemies) {
     for (let n1Col = 0; n1Col < columnsOfEnemies; n1Col++) {
       // Level 1
       this.enemiesCollection[n1Row][n1Col] = new Enemy(
-        this.xSquad + n1Col * spaceBetweenEnemies,
-        this.ySquad + n1Row * spaceBetweenEnemies,
+        this.xSquad + n1Col * this.spaceBetweenEnemies,
+        this.ySquad + n1Row * this.spaceBetweenEnemies,
         'rookie',
       )
     }
@@ -113,12 +118,12 @@ Squad.prototype.move = function () {
     })
   })
 
-  if ( this._xMaxSquad + setup.enemiesVelocity < setup.limitWidth - setup.enemySquadWidth && this._goToRight ) {
+  if ( this._xMaxSquad + squad.enemiesVelocity < this.limitWidth - this.enemySquadWidth && this._goToRight ) {
     this._moveSquadTo('right')
   }
   if (
     this._xMaxSquad + setup.enemiesVelocity
-      >= setup.limitWidth - setup.enemySquadWidth * 2
+      >= setup.limitWidth - this.enemySquadWidth * 2
     && this._goToRight
   ) {
     this._moveSquadTo('down')
@@ -129,13 +134,13 @@ Squad.prototype.move = function () {
     this._moveSquadTo('left')
   }
   if (
-    this._xMinSquad - setup.enemiesVelocity > setup.enemySquadWidth
+    this._xMinSquad - setup.enemiesVelocity > this.enemySquadWidth
     && this._goToLeft
   ) {
     this._moveSquadTo('left')
   }
   if (
-    this._xMinSquad - setup.enemiesVelocity <= setup.enemySquadWidth
+    this._xMinSquad - setup.enemiesVelocity <= this.enemySquadWidth
     && this._goToLeft
   ) {
     this._moveSquadTo('down')
