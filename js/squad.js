@@ -12,14 +12,13 @@ function Squad(enemiesInRow, enemiesInColumn, spaceBetweenEnemies, limitWidth, l
   // this._fillCoordinates();
   this._goToRight = true
   this._goToLeft = false
-  // fill the squad
   this._timeStampLastShot = Date.now()
   // this.bombCounter = 0;
   this.bombMax = weapons.bomb.ratio //.bombMax
-  this._enroll(enemiesInRow, enemiesInColumn)
   this.spaceBetweenEnemies = spaceBetweenEnemies
-  this.enemySquadWidth = squad.enemiesWidth
-  this.enemiesHeight = squad.enemiesHeight
+
+  // fill the squad
+  this._enroll(enemiesInRow, enemiesInColumn)
 }
 
 Squad.prototype._enroll = function (rowsOfEnemies, columnsOfEnemies) {
