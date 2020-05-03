@@ -27,7 +27,7 @@ function Projectile(options) {
 }
 
 Projectile.prototype.trajectory = function () {
-  this.type=='missile' ? this.y -= this.velocity : this.y += this.velocity
+  this.type === 'missile' ? this.y -= this.velocity : this.y += this.velocity
 }
 
 Projectile.prototype.draw = function (ctx) {
