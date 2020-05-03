@@ -37,7 +37,9 @@ img.cabinet-bottom {
 div.stars {
   width: 100%; /*800px;*/
 }
+
 #game-zone {
-  width: 100%; /*800px;*/
+  width: 100%;
   float: center;
+  max-width: 800px;
 }
