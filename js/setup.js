@@ -9,35 +9,40 @@ const setup = {
   stateOfGame: 'intro',
   lives: 3,
   gameImageOfBackground: 'assets/img/background.png',
-  gameIntroImage:'assets/img/IntroSI40anniversary_transp.png',
+  gameIntroImage: 'assets/img/IntroSI40anniversary_transp.png',
   gameIntroMusic: 'assets/sounds/duel of fates.mp3',
   // SQUAD
   enemiesInRow: 5, // always 5
   enemiesInColumn: 12, // can select quantity of columns
-  timerPresentBoss() { return Math.random() * (1 - 0.5) + 0.5 }, // random min 15s max 30s in timer 30000
+  enemiesVelocity: 3,
+  spaceBetweenEnemies: 40,
+  enemySquadWidth: 25,
+  enemySquadHeight: 25,
+  // Timer Boss Appearance
+  timerBetweenBossAppearance() { return Math.random() * (1 - 0.5) + 0.5 }, // random min 15s max 30s in timer 30000
 }
 
 // Weapons
 const weapons = {
   // Projectiles
-  projectil: {
-    missileColor: 'green',
-    missileWidth: 24,
-    misileHeiht: 48,
-    missileMax: 2, // ratio missile equal to 3fps
-    missileVelocity: 10,
-    missileImage: 'assets/img/bullets.png',
+  missile: {
+    width: 24,
+    height: 48,
+    color: 'green',
+    ratio: 2, // ratio missile equal to 3fps
+    velocity: 10,
+    image: 'assets/img/bullets.png',
   },
   bomb: {
-  // bomb
-    bombColor: 'yellow',
-    bombWidth: 20,
-    bombHeiht: 20,
-    bombMax: 6,
-    bombTimer: 6,
-    bombVelocity: 3,
-    bombPoints: 5,
-    bombImage: 'assets/img/bomb.png',
+    // bomb
+    width: 20,
+    height: 20,
+    color: 'yellow',
+    ratio: 6,
+    timer: 6,
+    velocity: 3,
+    points: 5,
+    image: 'assets/img/bomb.png',
   },
 }
 
@@ -88,6 +93,7 @@ const liveScore = {
   height: 144,
   image: 'assets/img/lives-120x144x4.png',
 }
+
 // actors
 player1 = {
   // player
@@ -100,15 +106,38 @@ player1 = {
 }
 
 const enemies = {
-  boss : {
+  boss: {
     // BOSS
-    enemyBossWidth: 63,
-    enemyBossHeiht: 40,
-    enemyBossColor: '#0000FF',
-    enemyBossPoints() { return Math.floor(Math.random() * 250) },
-    enemyBossImage: 'assets/img/bomb1.png', // 'assets/img/boss.png',
+    width: 63,
+    height: 40,
+    color: '#0000FF',
+    points() {
+      return Math.floor(Math.random() * 250)
+    },
+    image: 'assets/img/bomb1.png', // 'assets/img/boss.png',
   },
-  official :{},
-  veteran :{},
-  rookie : {},
+  official: {
+    // enemy Level3
+    width: setup.enemySquadWidth,
+    height: setup.enemySquadHeight,
+    color: '#3366CC',
+    points: 50,
+    image: 'assets/img/enemyOfficial.png',
+  },
+  veteran: {
+    // enemy Level2
+    width: setup.enemySquadWidth,
+    height: setup.enemySquadHeight,
+    color: '#FF00FF',
+    points: 25,
+    image: 'assets/img/enemyVeteran.png',
+  },
+  rookie: {
+    // enemy Level1
+    width: setup.enemySquadWidth,
+    height: setup.enemySquadHeight,
+    color: '#33CC33',
+    points: 15,
+    image: 'assets/img/enemyRookie.png',
+  },
 }

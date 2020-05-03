@@ -13,7 +13,7 @@ function Squad(enemiesInRow, enemiesInColumn) {
   // fill the squad
   this._timeStampLastShot = Date.now()
   // this.bombCounter = 0;
-  this.bombMax = setup.bombMax
+  this.bombMax = weapons.bomb.ratio//.bombMax
   this._enroll(enemiesInRow, enemiesInColumn)
 }
 
@@ -23,19 +23,35 @@ Squad.prototype._enroll = function (rowsOfEnemies, columnsOfEnemies) {
     this.enemiesCollection[i] = new Array(columnsOfEnemies)
   }
 
-  for (let n3Col = 0; n3Col < columnsOfEnemies; n3Col++) { // Level 3
-    this.enemiesCollection[0][n3Col] = new Enemy(this.xSquad + n3Col * setup.enemySpace, this.ySquad, 'official')
+  for (let n3Col = 0; n3Col < columnsOfEnemies; n3Col++) {
+    // Level 3
+    this.enemiesCollection[0][n3Col] = new Enemy(
+      this.xSquad + n3Col * setup.spaceBetweenEnemies,
+      this.ySquad,
+      'official',
+    )
   }
   for (let n2Row = 1; n2Row < 3; n2Row++) {
-    for (let n2Col = 0; n2Col < columnsOfEnemies; n2Col++) { // Level 2
-      this.enemiesCollection[n2Row][n2Col] = new Enemy(this.xSquad + n2Col * setup.enemySpace, this.ySquad + n2Row * setup.enemySpace, 'veteran')
+    for (let n2Col = 0; n2Col < columnsOfEnemies; n2Col++) {
+      // Level 2
+      this.enemiesCollection[n2Row][n2Col] = new Enemy(
+        this.xSquad + n2Col * setup.spaceBetweenEnemies,
+        this.ySquad + n2Row * setup.spaceBetweenEnemies,
+        'veteran',
+      )
     }
   }
   for (let n1Row = 3; n1Row < rowsOfEnemies; n1Row++) {
-    for (let n1Col = 0; n1Col < columnsOfEnemies; n1Col++) { // Level 1
-      this.enemiesCollection[n1Row][n1Col] = new Enemy(this.xSquad + n1Col * setup.enemySpace, this.ySquad + n1Row * setup.enemySpace, 'rookie')
+    for (let n1Col = 0; n1Col < columnsOfEnemies; n1Col++) {
+      // Level 1
+      this.enemiesCollection[n1Row][n1Col] = new Enemy(
+        this.xSquad + n1Col * setup.spaceBetweenEnemies,
+        this.ySquad + n1Row * setup.spaceBetweenEnemies,
+        'rookie',
+      )
     }
   }
+  console.log(this.enemiesCollection);
 }
 
 Squad.prototype._moveSquadTo = function (direction) {
@@ -58,7 +74,7 @@ Squad.prototype._moveSquadTo = function (direction) {
   })
 }
 
-Squad.prototype._isDestroyed = function () {
+Squad.prototype.isDestroyed = function () {
   return this.enemiesCollection.length === 0
 }
 
@@ -74,7 +90,7 @@ Squad.prototype.atack = function () {
     })
   })
   // order fire to random enemy can shot
-  shootRandomInEnemiesCanShoot = enemiesCanShoot[Math.floor(Math.random() * (enemiesCanShoot.length - 1))]
+  shootRandomInEnemiesCanShoot =    enemiesCanShoot[Math.floor(Math.random() * (enemiesCanShoot.length - 1))]
   // shootOk = enemyShootRandom.fire();
   this.bombBuffer.push(shootRandomInEnemiesCanShoot.fire())
 }
@@ -82,22 +98,29 @@ Squad.prototype.atack = function () {
 Squad.prototype.move = function () {
   this.enemiesCollection.forEach((row) => {
     row.forEach((enemy) => {
-      if (enemy.y > this._yMaxSquad) { // enemy in the bottom
+      if (enemy.y > this._yMaxSquad) {
+        // enemy in the bottom
         this._yMaxSquad = enemy.y
       }
-      if (enemy.x >= this._xMaxSquad) { // enemy in the right
+      if (enemy.x >= this._xMaxSquad) {
+        // enemy in the right
         this._xMaxSquad = enemy.x
       }
-      if (enemy.x < this._xMinSquad) { // enemy in the left
+      if (enemy.x < this._xMinSquad) {
+        // enemy in the left
         this._xMinSquad = enemy.x
       }
     })
   })
 
-  if (this._xMaxSquad + setup.enemyVelocity < setup.limitWidth - setup.enemyWidth && this._goToRight) {
+  if ( this._xMaxSquad + setup.enemiesVelocity < setup.limitWidth - setup.enemySquadWidth && this._goToRight ) {
     this._moveSquadTo('right')
   }
-  if (this._xMaxSquad + setup.enemyVelocity >= setup.limitWidth - setup.enemyWidth * 2 && this._goToRight) {
+  if (
+    this._xMaxSquad + setup.enemiesVelocity
+      >= setup.limitWidth - setup.enemySquadWidth * 2
+    && this._goToRight
+  ) {
     this._moveSquadTo('down')
     this._goToRight = false
     this._goToLeft = true
@@ -105,10 +128,16 @@ Squad.prototype.move = function () {
     this._xMinSquad = setup.limitHeight
     this._moveSquadTo('left')
   }
-  if (this._xMinSquad - setup.enemyVelocity > setup.enemyWidth && this._goToLeft) {
+  if (
+    this._xMinSquad - setup.enemiesVelocity > setup.enemySquadWidth
+    && this._goToLeft
+  ) {
     this._moveSquadTo('left')
   }
-  if (this._xMinSquad - setup.enemyVelocity <= setup.enemyWidth && this._goToLeft) {
+  if (
+    this._xMinSquad - setup.enemiesVelocity <= setup.enemySquadWidth
+    && this._goToLeft
+  ) {
     this._moveSquadTo('down')
     this._goToRight = true
     this._goToLeft = false
@@ -116,8 +145,9 @@ Squad.prototype.move = function () {
     this._xMinSquad = setup.limitHeight
     this._moveSquadTo('right')
   }
-  if (this._yMaxSquad === setup.limitHeight - 20) { // } playerPosX()) {
+  if (this._yMaxSquad === setup.limitHeight - 20) {
+    // } playerPosX()) {
     return true
   }
-  return false   // TODO: observe comportament
+  return false // TODO: observe comportament
 }

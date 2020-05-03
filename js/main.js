@@ -19,7 +19,7 @@ window.onload = function () {
 
   keyControl.init()
   game = new Game(ctx, keyControl.keysBuffer)
-  console.log(introMusic)
+  // console.log(introMusic)
   introMusic.play()
   loop()
 }
@@ -66,13 +66,7 @@ const loop = () => {
   }
 }
 
-function logo(action) {
-  if (action) {
-    $('img.logo').show()
-  } else {
-    $('img.logo').hide()
-  }
-}
+function logo(action) { action ? $('img.logo').show() : $('img.logo').hide() }
 
 function drawCabinet(action) {
   if (action) {

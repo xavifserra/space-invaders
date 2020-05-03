@@ -15,7 +15,7 @@ function Game(ctx, keysBuffer) {
   this._timeStampMissile = Date.now()
   this._timeStampBoss = Date.now()
   this._timestampSquad = Date.now()
-  this.enemyBossTimer = enemies.boss.enemyBossTimer()
+  this.enemyBossTimer = setup.timerBetweenBossAppearance()
 
   // player & enemies
   this.boss = undefined
@@ -184,7 +184,7 @@ Game.prototype.drawSquad = function () {
   })
 
   this.squad.move()
-  if (Date.now() - this._timestampSquad > (3000 / setup.bombTimer) && !this.squad._isDestroyed()) {
+  if (Date.now() - this._timestampSquad > (3000 / setup.bombTimer) && !this.squad.isDestroyed()) {
     this._timestampSquad = Date.now()
     this.squad.atack()
   }
@@ -292,7 +292,7 @@ Game.prototype.draw = function () {
     // console.log('GAME OVER');
   }
 
-  if (this.squad._isDestroyed() && !this.boss && this.livesOfPlayer > 0) { // destroyed squad and bosses
+  if (this.squad.isDestroyed() && !this.boss && this.livesOfPlayer > 0) { // destroyed squad and bosses
     this.state = 'win'
   }
 
