@@ -11,6 +11,7 @@ const setup = {
   gameImageOfBackground: 'assets/img/background.png',
   gameIntroImage: 'assets/img/IntroSI40anniversary_transp.png',
   gameIntroMusic: 'assets/sounds/duel of fates.mp3',
+  missileMax: 2, // ratio missile equal to 3fps
   enemiesVelocity: 3,
   enemiesInRow: 5, // always 5
   enemiesInColumn: 12, // can select quantity of columns
@@ -28,7 +29,6 @@ const weapons = {
     width: 24,
     height: 48,
     color: 'green',
-    ratio: 2, // ratio missile equal to 3fps
     velocity: 10,
     image: 'assets/img/bullets.png',
   },
